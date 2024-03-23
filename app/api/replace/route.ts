@@ -18,7 +18,10 @@ export async function POST(req: NextRequest) {
   2. Brainstorm a new set of activities for that day. The new activities should be different than the
   existing ones and should not overlap with activities already planned for other days in the
   itinerary.
-  3. Remove the old activities for ${day} and replace them with your new suggested activities.`;
+  3. Remove the old activities for ${day} and replace them with your new suggested activities.
+  
+  In your generated text, only include the JSON object. Do not include any additional text or formatting.
+`;
 
   const prompt = `Output the updated complete itinerary in the original JSON format.`;
 
@@ -33,11 +36,9 @@ export async function POST(req: NextRequest) {
     
     
     // is this correct? What does the original itinerary look like?
-    const itinerary = response.content[0].text.trim();
+    const itinerary = JSON.parse(response.content[0].text.trim());
     console.log("Updated itinerary:", itinerary);
-    const locations = JSON.parse(itinerary);
-
-    return Response.json({ locations, itinerary });
+    return Response.json({ itinerary });
   } catch (error) {
     console.error("Error updating itinerary:", error);
     return new Response("Failed to generate itinerary", { status: 500 });
