@@ -7,7 +7,7 @@ export default function Home() {
     <main className="flex min-h-screen flex-col items-center p-24">
       <div className="text-red-500">Hello World!</div>
       <Button>Hello</Button>
-      <Map coordinates={[[39.657325, -4.024902]]} locations={[]} routes={[]}/>
+      <Map coordinates={[[-74.0060, 40.7128]]} locations={[]} routes={[]}/>
     </main>
   );
 }
