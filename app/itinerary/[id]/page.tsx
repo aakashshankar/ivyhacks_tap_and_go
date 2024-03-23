@@ -62,9 +62,9 @@ export default function ItineraryPage({ itinerary }: ItineraryProps) {
         ))}
       </div>
       <Map
-        // locations={itinerary.locations[selectedDay]}
-        // coordinates={itinerary.coordinates[selectedDay]}
-        // routes={itinerary.routes[selectedDay]}
+        locations={itinerary.locations[selectedDay]}
+        coordinates={itinerary.coordinates[selectedDay]}
+        routes={itinerary.routes[selectedDay]}
       />
     </div>
   );
