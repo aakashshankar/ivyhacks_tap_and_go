@@ -4,15 +4,19 @@ import mbxGeocoding from '@mapbox/mapbox-sdk/services/geocoding';
 
 const geocodingClient = mbxGeocoding({ accessToken: process.env.MAPBOX_ACCESS_TOKEN! });
 
+type Locations = {
+  [key: string]: string[];
+};
+
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
     const { locations } = req.body;
 
     try {
-      const coordinates: { [key: string]: [[number, number]] } = {};
+      const coordinates: { [key: string]: number[] } = {};
 
       for (const day in locations) {
-        const dayLocations = locations[day];
+        const dayLocations = locations[parseInt(day)];
         const dayCoordinates = await Promise.all(
           dayLocations.map(async (location: string) => {
             const response = await geocodingClient.forwardGeocode({ query: location, limit: 1 }).send();
@@ -20,7 +24,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             return feature.geometry.coordinates;
           })
         );
-        coordinates[day] = dayCoordinates!;
+        coordinates[parseInt(day)] = dayCoordinates as [number, number];
       }
 
       res.status(200).json({ coordinates });
