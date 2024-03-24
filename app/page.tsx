@@ -39,6 +39,7 @@ import {
   CommandSeparator,
   CommandShortcut,
 } from "@/components/ui/command";
+import Link from "next/link";
 
 interface FormData {
   location: string;
@@ -75,7 +76,7 @@ export default function Home() {
   };
 
   return (
-    <main className="flex min-h-screen flex-col items-center">
+    <main className="flex min-h-screen flex-col items-center px-6">
       <div className="text-2xl text-center py-8">Plan your trip</div>
 
       <Form {...form}>
@@ -210,7 +211,9 @@ export default function Home() {
             )}
           />
           <div className="flex justify-center">
-            <Button type="submit">Generate Plan</Button>
+            <Link href="/itinerary" passHref>
+              <Button>Generate Plan</Button>
+            </Link>
           </div>
         </form>
       </Form>
