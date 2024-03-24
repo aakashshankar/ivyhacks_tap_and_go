@@ -1,4 +1,13 @@
 import { Locations, Coordinates, Profile, WeatherForecast } from './types';
+import fs from 'fs';
+
+function writeDbData(data: any) {
+    try {
+        fs.writeFileSync('db.json', JSON.stringify(data, null, 2));
+    } catch (error) {
+        console.error('Error writing to db.json:', error);
+    }
+}
 
 export async function fetchCoords(locations: Locations) {
     const response = await fetch('/api/cartesian', {
@@ -55,6 +64,18 @@ export async function generatePlan(destination: string, travelStyle: string, bud
     }
 
     const data = await response.json();
+    const dbData = {
+        destination,
+        travelStyle,
+        budget,
+        companion,
+        startDate,
+        endDate,
+        itin: data.locations,
+        weather: forecast,
+        coordinates: destCoords,
+    };
+    writeDbData(dbData);
     return { locations: data.locations, itinerary: data.itinerary };
 }
 
