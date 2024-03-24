@@ -20,7 +20,6 @@ export default function Page() {
     const viewport = event.currentTarget;
 
     if (viewport.scrollTop > 5) {
-      console.log("SCROLL");
       setIsScroll(true);
     } else {
       setIsScroll(false);
@@ -30,7 +29,7 @@ export default function Page() {
     <ScrollArea.Root className="h-[844px]">
       <ScrollArea.Viewport className="h-full w-full" onScroll={handleScroll}>
         <MobileHeader isScroll={isScroll} backgroundColor="bg-[#F2ECA4]" />
-        <div className="border-2 ">
+        <div className="">
           {/* SECOND HEADER SECTION */}
           <div className="space-y-5 bg-[#F2ECA4] sticky left-0 top-10 z-50">
             <div className={`space-y-3 px-6`}>
@@ -51,7 +50,7 @@ export default function Page() {
             ))}
           </div>
         </div>
-        <Footer />
+        <Footer isScroll={isScroll} />
       </ScrollArea.Viewport>
       <ScrollArea.Scrollbar orientation="vertical">
         <ScrollArea.Thumb />

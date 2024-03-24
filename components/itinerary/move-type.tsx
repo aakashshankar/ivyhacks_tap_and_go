@@ -1,11 +1,21 @@
+import { BusFrontIcon, CarFrontIcon, FootprintsIcon } from "lucide-react";
 import React from "react";
 
 const MoveType = () => {
   return (
-    <div className="bg-white py-2 mx-auto flex justify-center items-center space-x-3 font-semibold text-xs">
-      <div>10 min</div>
-      <div>5 min</div>
-      <div>5 min</div>
+    <div className="bg-[#F0ECE4] py-2 mx-auto flex justify-center items-center space-x-3 text-xs">
+      <div className="flex space-x-2 text-[#2E2E29]">
+        <FootprintsIcon className="w-5 h-5" />
+        <p>10 min</p>
+      </div>
+      <div className="flex space-x-2 text-[#2E2E29]">
+        <BusFrontIcon className="w-5 h-5" />
+        <p>10 min</p>
+      </div>
+      <div className="flex space-x-2 text-[#2E2E29]">
+        <CarFrontIcon className="w-5 h-5" />
+        <p>10 min</p>
+      </div>
     </div>
   );
 };

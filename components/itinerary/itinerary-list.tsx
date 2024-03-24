@@ -3,16 +3,18 @@ import { ChevronDownIcon } from "lucide-react";
 import { ChevronUpIcon } from "lucide-react";
 import { ClockIcon } from "lucide-react";
 import { HourglassIcon } from "lucide-react";
-import { PiggyBankIcon } from "lucide-react";
+import { BanknoteIcon } from "lucide-react";
 import { MapPinIcon } from "lucide-react";
 
 const ItineraryList = () => {
   const [isOpen, setIsOpen] = React.useState(false);
   return (
-    <div className="p-3 bg-white/30">
+    <div className="p-3 bg-white">
       {/* Title */}
       <div className="grid grid-cols-8 gap-2">
-        <div className="p-1 bg-white rounded-full text-center font-bold">1</div>
+        <div className="p-1 bg-[#99BAEC] rounded-full text-center font-bold">
+          1
+        </div>
         <div className="col-span-6 text-left font-bold ml-2 text-lg">
           Museum of Modern Art
         </div>
@@ -64,7 +66,7 @@ const ItineraryList = () => {
               <p>3-4 hours</p>
             </div>
             <div className="flex space-x-2 justify-self-end">
-              <PiggyBankIcon className="w-5 h-5" />
+              <BanknoteIcon className="w-5 h-5" />
               <p>$25 - $35</p>
             </div>
           </div>

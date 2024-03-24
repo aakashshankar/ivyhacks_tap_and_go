@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form";
 import { SearchIcon, LuggageIcon } from "lucide-react";
-import { PiggyBankIcon } from "lucide-react";
+import { BanknoteIcon } from "lucide-react";
 
 import {
   Form,
@@ -202,7 +202,7 @@ export default function Home() {
                   <FormControl>
                     <div className="w-full relative">
                       <div className="absolute left-4 top-1/2 transform -translate-y-1/2">
-                        <PiggyBankIcon className="w-5 h-5 text-[#2E2E29]" />
+                        <BanknoteIcon className="w-5 h-5 text-[#2E2E29]" />
                       </div>
                       <Input placeholder="500" className="pl-12" />
                     </div>
