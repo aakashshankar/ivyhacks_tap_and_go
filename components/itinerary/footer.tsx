@@ -1,0 +1,58 @@
+import React, { useState } from "react";
+import { Separator } from "../ui/separator";
+import { ClockIcon } from "lucide-react";
+import { HourglassIcon } from "lucide-react";
+import { BanknoteIcon } from "lucide-react";
+
+interface FooterProps {
+  isScroll: boolean;
+}
+const Footer = ({ isScroll }: FooterProps) => {
+  return (
+    <div
+      className={`sticky bottom-0 z-50 bg-[#F0ECE4] ${
+        isScroll && "rounded-t-2xl"
+      }`}
+    >
+      {!isScroll ? (
+        <div className="space-y-2 p-4  ">
+          <p>Mon, Mar 25</p>
+          <div className="w-full rounded-2xl bg-white py-2 px-4 flex items-center justify-between">
+            <p>Schedule</p>
+            <p>10:00 am - 08:00 pm</p>
+          </div>
+          <div className="w-full rounded-2xl bg-white py-2 px-4 flex items-center justify-between">
+            <p>Daily Budget</p>
+            <p>$ 65</p>
+          </div>
+        </div>
+      ) : (
+        <div className="space-y-2 p-4  ">
+          <p>Mon, Mar 25</p>
+          <div className="w-full rounded-2xl bg-white py-2 px-4 flex items-center justify-between">
+            <div className="flex items-center space-x-2">
+              <ClockIcon className="w-5 h-5" />
+              <p>09:00 am - 06.00 pm</p>
+            </div>
+            <div className="flex space-x-2 justify-self-end">
+              <BanknoteIcon className="w-5 h-5" />
+              <p>$25 - $35</p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <Separator className="bg-black" />
+      <div className="p-4 flex space-x-2 justify-center">
+        <div className="p-3 flex-1 border border-black rounded-full text-center hover:cursor-pointer">
+          Regenerate
+        </div>
+        <div className="p-3 flex-1 rounded-full text-center bg-[#99BAEC] hover:cursor-pointer">
+          Save Plan
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Footer;

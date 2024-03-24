@@ -4,12 +4,20 @@ import { BatteryFullIcon } from "lucide-react";
 import { BarChart } from "lucide-react";
 import { NavigationIcon } from "lucide-react";
 
-const Header = () => {
+interface MobileHeaderProps {
+  backgroundColor: string;
+  isScroll: boolean;
+}
+const MobileHeader = ({ backgroundColor, isScroll }: MobileHeaderProps) => {
   const now = new Date();
-  const hours = now.getHours();
-  const minutes = now.getMinutes();
+  const hours = String(now.getHours()).padStart(2, "0"); // Format hours to 2 digits
+  const minutes = String(now.getMinutes()).padStart(2, "0"); // Format hours to 2 digits
   return (
-    <div className="flex items-center justify-between h-10 py-2">
+    <div
+      className={`flex items-center justify-between h-10 ${
+        isScroll ? "py-4" : "py-8"
+      } px-12 sticky top-0 z-50 rounded-t-2xl ${backgroundColor}`}
+    >
       <div className="flex items-center space-x-1">
         <p className="text-sm">
           {hours}:{minutes}
@@ -26,4 +34,4 @@ const Header = () => {
   );
 };
 
-export default Header;
+export default MobileHeader;
