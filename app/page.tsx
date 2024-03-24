@@ -8,6 +8,8 @@ import { type DateRange } from "react-day-picker";
 import { add, format } from "date-fns";
 import { useForm } from "react-hook-form";
 import { SearchIcon, LuggageIcon } from "lucide-react";
+import { PiggyBankIcon } from "lucide-react";
+import { generatePlan } from "@/lib/actions";
 import { BanknoteIcon } from "lucide-react";
 
 import {
@@ -23,10 +25,10 @@ import { Input } from "@/components/ui/input";
 import DatePickerWithRange from "@/components/home/date-picker-with-range";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import { BatteryFullIcon } from "lucide-react";
 import { BarChart } from "lucide-react";
 import { NavigationIcon } from "lucide-react";
 import { Wifi, WifiIcon } from "lucide-react";
+import { BatteryFullIcon } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -53,18 +55,17 @@ import {
 import { CalendarIcon, Check, ChevronsUpDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
-import { generatePlan } from "@/lib/actions";
 
 import { dateJotai } from "@/lib/jotai";
 import { useAtom } from "jotai";
 import { useEffect } from "react";
 
 interface FormData {
-  location: string;
-  style: string;
+  destination: string;
+  travelStyle: string;
   date: DateRange;
-  startDate: Date;
-  endDate: Date;
+  startDate: string;
+  endDate: string;
   budget: string;
   companion: string[];
 }
@@ -86,10 +87,11 @@ export default function Home() {
   const minutes = String(now.getMinutes()).padStart(2, "0");
   const form = useForm<FormData>({
     defaultValues: {
-      location: "",
-      style: "",
-      startDate: new Date(),
-      endDate: new Date(),
+      destination: "",
+      travelStyle: "",
+      startDate: "",
+      endDate: "",
+      date: undefined,
       budget: "",
       companion: [],
     },
@@ -112,13 +114,19 @@ export default function Home() {
     console.log(data);
     // generatePlan(...);
   };
+  const dateFormatted = new Intl.DateTimeFormat("en-US", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  });
 
-  const [dateRange, setDateRange] = useState<DateRange>();
+  const [selectedDate, setSelectedDate] = useAtom<DateRange | undefined>(
+    dateJotai
+  );
 
-  const handleDateRangeChange = (range: DateRange | undefined) => {
-    setDateRange(range);
-    console.log("Date Range:", range);
-  };
+  useEffect(() => {
+    console.log(selectedDate);
+  }, [selectedDate]);
 
   return (
     <main className="relative flex flex-col items-center rounded-t-2xl overflow-y-scroll">
@@ -159,7 +167,7 @@ export default function Home() {
           >
             <FormField
               control={form.control}
-              name="location"
+              name="destination"
               render={({ field }) => (
                 // <FormItem>
                 //   <FormLabel className="text-black/80">Where to?</FormLabel>
@@ -207,7 +215,7 @@ export default function Home() {
                                 value={location.label}
                                 key={location.value}
                                 onSelect={() => {
-                                  form.setValue("location", location.value);
+                                  form.setValue("destination", location.value);
                                 }}
                               >
                                 <Check
@@ -232,7 +240,7 @@ export default function Home() {
             />
             <FormField
               control={form.control}
-              name="style"
+              name="travelStyle"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Choose your travel style</FormLabel>
@@ -275,21 +283,40 @@ export default function Home() {
             />
             <FormField
               control={form.control}
-              name="date"
+              name="startDate"
+              render={({ field }) => (
+                <input
+                  type="hidden"
+                  {...field}
+                  value={dateFormatted.format(selectedDate?.from)}
+                />
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="endDate"
+              render={({ field }) => (
+                <input
+                  type="hidden"
+                  {...field}
+                  value={dateFormatted.format(selectedDate?.to)}
+                />
+              )}
+            />
+            <FormField
+              control={form.control}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Date</FormLabel>
                   <FormControl>
-                    <DatePickerWithRange
-                      className="[&>button]:w-full"
-                      onDateRangeChange={handleDateRangeChange}
-                    />
+                    <DatePickerWithRange className="[&>button]:w-full" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
+              name="date"
             />
-
             <FormField
               control={form.control}
               name="budget"
@@ -351,14 +378,9 @@ export default function Home() {
               )}
             />
             <div className="flex-1 w-full">
-              {/* <Link href="/itinerary" passHref> */}
-              <Button
-                className="bg-[#99BAEC] text-black w-full h-14 text-lg hover:bg-[#F2ECA4]"
-                type="submit"
-              >
+              <Button className="bg-[#99BAEC] text-black w-full h-14 text-lg hover:bg-[#F2ECA4]">
                 Generate Plan
               </Button>
-              {/* </Link> */}
             </div>
           </form>
         </Form>

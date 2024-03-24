@@ -19,14 +19,13 @@ export async function fetchCoords(locations: Locations) {
 }
 
 export async function generatePlan(formData: FormData) {
-  const destination = formData.get("location");
-  const travelStyle = formData.get("style");
-  const budget = formData.get("budget");
-  const companion = formData.get("companion");
-  const startDate = formData.get("startDate");
-  const endDate = formData.get("endDate");
-  console.log("data", Object.fromEntries(formData.entries()));
-  return;
+  console.log("Entering generatePlan function");
+  const destination = formData.get("destination") as string;
+  const travelStyle = formData.get("travelStyle") as string;
+  const budget = formData.get("budget") as string;
+  const companion = formData.get("companion") as string;
+  const startDate = formData.get("startDate") as string;
+  const endDate = formData.get("endDate") as string;
 
   const coordinatesResponse = await fetch("/api/cartesian", {
     method: "POST",
