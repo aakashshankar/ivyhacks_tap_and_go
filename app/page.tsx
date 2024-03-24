@@ -111,19 +111,28 @@ export default function Home() {
             name="style"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Choose your travel theme</FormLabel>
+                <FormLabel>Select your travel style</FormLabel>
                 <FormControl>
                   <Select>
                     <SelectTrigger className="w-full">
-                      <SelectValue placeholder="Select a travel style" />
+                      <SelectValue placeholder="Travel style" />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectGroup>
-                        <SelectItem value="apple">Apple</SelectItem>
-                        <SelectItem value="banana">Banana</SelectItem>
-                        <SelectItem value="blueberry">Blueberry</SelectItem>
-                        <SelectItem value="grapes">Grapes</SelectItem>
-                        <SelectItem value="pineapple">Pineapple</SelectItem>
+                        <SelectItem value="adventure">
+                          Adventure Travel
+                        </SelectItem>
+                        <SelectItem value="foodie">Foodie Travel</SelectItem>
+                        <SelectItem value="wellness">
+                          Wellness Travel
+                        </SelectItem>
+                        <SelectItem value="accommodation">
+                          Accommodation Focused
+                        </SelectItem>
+                        <SelectItem value="culture">
+                          Cultural Exploration
+                        </SelectItem>
+                        <SelectItem value="slow">Slow Travel</SelectItem>
                       </SelectGroup>
                     </SelectContent>
                   </Select>
@@ -152,7 +161,7 @@ export default function Home() {
               <FormItem>
                 <FormLabel>Budget</FormLabel>
                 <FormControl>
-                  <Input placeholder="100" {...field} />
+                  <Input placeholder="$100" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
