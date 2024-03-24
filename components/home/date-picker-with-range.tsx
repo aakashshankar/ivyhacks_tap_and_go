@@ -18,10 +18,7 @@ import { useAtom } from "jotai";
 
 export default function DatePickerWithRange({
   className,
-  onDateRangeChange,
-}: React.HTMLAttributes<HTMLDivElement> & {
-  onDateRangeChange: (range: DateRange | undefined) => void;
-}) {
+}: React.HTMLAttributes<HTMLDivElement>) {
   const currentDate = new Date();
   let day = currentDate.getDate();
   let month = currentDate.getMonth();
@@ -38,10 +35,6 @@ export default function DatePickerWithRange({
   React.useEffect(() => {
     setSelectedDate(date);
   }, [date]);
-
-  React.useEffect(() => {
-    onDateRangeChange(date);
-  }, [date, onDateRangeChange]);
 
   return (
     <div className={cn("grid gap-2", className)}>

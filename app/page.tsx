@@ -62,7 +62,7 @@ import { useEffect } from "react";
 
 interface FormData {
   destination: string;
-  travelStyle: string;
+  style: string;
   date: DateRange;
   startDate: string;
   endDate: string;
@@ -88,7 +88,7 @@ export default function Home() {
   const form = useForm<FormData>({
     defaultValues: {
       destination: "",
-      travelStyle: "",
+      style: "",
       startDate: "",
       endDate: "",
       date: undefined,
@@ -111,7 +111,7 @@ export default function Home() {
   ] as const;
 
   const onSubmit = (data: any) => {
-    console.log(data);
+    console.log(form.getValues());
     // generatePlan(...);
   };
   const dateFormatted = new Intl.DateTimeFormat("en-US", {
@@ -169,113 +169,78 @@ export default function Home() {
               control={form.control}
               name="destination"
               render={({ field }) => (
-                // <FormItem>
-                //   <FormLabel className="text-black/80">Where to?</FormLabel>
-                //   <FormControl>
-                //     {/* <Input placeholder="New York, NY" {...field} /> */}
-                //     <div className="w-full relative">
-                //       <div className="absolute left-4 top-1/2 transform -translate-y-1/2">
-                //         <SearchIcon className="w-5 h-5 text-[#2E2E29]" />
-                //       </div>
-                //       <Input placeholder="Search a city" className="pl-12" />
-                //     </div>
-                //   </FormControl>
-                //   <FormMessage />
-                // </FormItem>
-                <FormItem className="flex flex-col">
-                  <FormLabel>Where to?</FormLabel>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <FormControl>
-                        <Button
-                          variant="outline"
-                          role="combobox"
-                          className={cn(
-                            "w-[200px] justify-between",
-                            !field.value && "text-muted-foreground"
-                          )}
-                        >
-                          {field.value
-                            ? locations.find(
-                                (location) => location.value === field.value
-                              )?.label
-                            : "Select location"}
-                          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                        </Button>
-                      </FormControl>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-[200px] p-0">
-                      <Command>
-                        <CommandInput placeholder="Search location..." />
-                        <CommandEmpty>No location found.</CommandEmpty>
-                        <CommandGroup>
-                          <CommandList>
-                            {locations.map((location) => (
-                              <CommandItem
-                                value={location.label}
-                                key={location.value}
-                                onSelect={() => {
-                                  form.setValue("destination", location.value);
-                                }}
-                              >
-                                <Check
-                                  className={cn(
-                                    "mr-2 h-4 w-4",
-                                    location.value === field.value
-                                      ? "opacity-100"
-                                      : "opacity-0"
-                                  )}
-                                />
-                                {location.label}
-                              </CommandItem>
-                            ))}
-                          </CommandList>
-                        </CommandGroup>
-                      </Command>
-                    </PopoverContent>
-                  </Popover>
+                <FormItem>
+                  <FormLabel className="text-black/80">Where to?</FormLabel>
+                  <FormControl>
+                    {/* <Input placeholder="New York, NY" {...field} /> */}
+                    <div className="w-full relative">
+                      <div className="absolute left-4 top-1/2 transform -translate-y-1/2">
+                        <SearchIcon className="w-5 h-5 text-[#2E2E29]" />
+                      </div>
+                      <Input
+                        placeholder="Search a city"
+                        className="pl-12"
+                        {...field}
+                      />
+                    </div>
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
             <FormField
               control={form.control}
-              name="travelStyle"
+              name="style"
               render={({ field }) => (
+                // <FormItem>
+                //   <FormLabel>Choose your travel style</FormLabel>
+                //   <Select
+                //     onValueChange={field.onChange}
+                //     defaultValue={field.value}
+                //   >
+                //     <FormControl>
+                //       <SelectTrigger className="w-full relative">
+                //         <div className="absolute left-4 top-1/2 transform -translate-y-1/2 z-10">
+                //           <LuggageIcon className="text-[#2E2E29] w-5 h-5" />
+                //         </div>
+                //         <div className="flex items-center pl-10 pr-4 py-2">
+                //           <SelectValue
+                //             placeholder="Travel style"
+                //             className="placeholder:text-left flex-1"
+                //           />
+                //         </div>
+                //       </SelectTrigger>
+                //     </FormControl>
+                //     <SelectContent>
+                //       <SelectGroup>
+                //         <SelectItem value="adventure">
+                //           Adventure Travel
+                //         </SelectItem>
+                //         <SelectItem value="foodie">Foodie Travel</SelectItem>
+                //         <SelectItem value="wellness">
+                //           Wellness Travel
+                //         </SelectItem>
+                //         <SelectItem value="accommodation">
+                //           Accommodation Focused
+                //         </SelectItem>
+                //         <SelectItem value="culture">
+                //           Cultural Exploration
+                //         </SelectItem>
+                //         <SelectItem value="slow">Slow Travel</SelectItem>
+                //       </SelectGroup>
+                //     </SelectContent>
+                //   </Select>
+                //   <FormMessage />
+                // </FormItem>
                 <FormItem>
-                  <FormLabel>Choose your travel style</FormLabel>
+                  <FormLabel>Travel Style</FormLabel>
                   <FormControl>
-                    <Select>
-                      <SelectTrigger className="w-full relative">
-                        <div className="absolute left-4 top-1/2 transform -translate-y-1/2 z-10">
-                          <LuggageIcon className="text-[#2E2E29] w-5 h-5" />
-                        </div>
-                        <div className="flex items-center pl-10 pr-4 py-2">
-                          <SelectValue
-                            placeholder="Travel style"
-                            className="placeholder:text-left flex-1"
-                          />
-                        </div>
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectGroup>
-                          <SelectItem value="adventure">
-                            Adventure Travel
-                          </SelectItem>
-                          <SelectItem value="foodie">Foodie Travel</SelectItem>
-                          <SelectItem value="wellness">
-                            Wellness Travel
-                          </SelectItem>
-                          <SelectItem value="accommodation">
-                            Accommodation Focused
-                          </SelectItem>
-                          <SelectItem value="culture">
-                            Cultural Exploration
-                          </SelectItem>
-                          <SelectItem value="slow">Slow Travel</SelectItem>
-                        </SelectGroup>
-                      </SelectContent>
-                    </Select>
+                    <div className="w-full relative">
+                      <div className="absolute left-4 top-1/2 transform -translate-y-1/2">
+                        <LuggageIcon className="w-5 h-5 text-[#2E2E29]" />
+                      </div>
+                      <Input placeholder="Adventure" className="pl-12" {...field} />
+                    </div>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -328,7 +293,7 @@ export default function Home() {
                       <div className="absolute left-4 top-1/2 transform -translate-y-1/2">
                         <BanknoteIcon className="w-5 h-5 text-[#2E2E29]" />
                       </div>
-                      <Input placeholder="500" className="pl-12" />
+                      <Input placeholder="500" className="pl-12" {...field} />
                     </div>
                   </FormControl>
                   <FormMessage />

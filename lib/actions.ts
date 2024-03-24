@@ -1,4 +1,5 @@
 "use server";
+import { redirect } from "next/navigation";
 import { Locations, Coordinates, Profile, WeatherForecast } from "./types";
 
 export async function fetchCoords(locations: Locations) {
@@ -21,21 +22,24 @@ export async function fetchCoords(locations: Locations) {
 export async function generatePlan(formData: FormData) {
   console.log("Entering generatePlan function");
   const destination = formData.get("destination") as string;
-  const travelStyle = formData.get("travelStyle") as string;
+  const style = formData.get("style") as string;
   const budget = formData.get("budget") as string;
   const companion = formData.get("companion") as string;
   const startDate = formData.get("startDate") as string;
   const endDate = formData.get("endDate") as string;
 
-  const coordinatesResponse = await fetch("/api/cartesian", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ locations: { destination: [destination] } }),
-  });
+  console.log("data", Object.fromEntries(formData.entries()));
 
-  console.log("coordinatesResponse", coordinatesResponse);
+  const coordinatesResponse = await fetch(
+    process.env.NEXT_PUBLIC_SERVER_URL + "/api/cartesian",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ locations: { destination: [destination] } }),
+    }
+  );
 
   if (!coordinatesResponse.ok) {
     throw new Error("Failed to get destination coordinates");
@@ -44,8 +48,20 @@ export async function generatePlan(formData: FormData) {
   const coordinatesData = await coordinatesResponse.json();
   const destCoords = coordinatesData.coordinates[0][0];
 
+  console.log("destCoords", destCoords);
+
+  // Format date into YYYY-MM-DD
+  const [month, day, year] = startDate.split("/");
+  let d1 = `${year}-${month}-${day}`;
+  const [month2, day2, year2] = endDate.split("/");
+  let d2 = `${year2}-${month2}-${day2}`;
+
+  console.log("d1", d1);
+  console.log("d2", d2);
+
   const weather = await fetch(
-    `/api/weather?latitude=${destCoords[1]}&longitude=${destCoords[0]}&startDate=${startDate}&endDate=${endDate}`,
+    process.env.NEXT_PUBLIC_SERVER_URL +
+      `/api/weather?latitude=${destCoords[1]}&longitude=${destCoords[0]}&startDate=${d1}&endDate=${d2}`,
     {
       method: "GET",
       headers: {
@@ -58,30 +74,33 @@ export async function generatePlan(formData: FormData) {
 
   console.log("forecast", forecast);
 
-  const response = await fetch("/api/plan", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      destination,
-      travelStyle,
-      budget,
-      companion,
-      startDate,
-      endDate,
-      forecast,
-    }),
-  });
-
-  console.log("plan", response);
+  const response = await fetch(
+    process.env.NEXT_PUBLIC_SERVER_URL + "/api/plan",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        destination,
+        style,
+        budget,
+        companion,
+        startDate,
+        endDate,
+        forecast,
+      }),
+    }
+  );
 
   if (!response.ok) {
     throw new Error("Failed to generate plan");
   }
 
   const data = await response.json();
-  return { locations: data.locations, itinerary: data.itinerary };
+
+  // return { locations: data.locations, itinerary: data.itinerary };
+  return redirect("/itinerary");
 }
 
 export async function getRoute(
@@ -109,7 +128,7 @@ export async function replaceItinerarySuggestion(
   itinerary: any,
   day: number,
   destination: string,
-  travelStyle: string,
+  style: string,
   budget: string,
   companion: string,
   startDate: string,
@@ -124,7 +143,7 @@ export async function replaceItinerarySuggestion(
       itinerary,
       day,
       destination,
-      travelStyle,
+      style,
       budget,
       companion,
       startDate,

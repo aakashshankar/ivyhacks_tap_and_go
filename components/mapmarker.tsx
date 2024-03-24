@@ -18,6 +18,7 @@ export default function MapMarker({ locations, coordinates }: MapMarkerProps) {
         >
           <div className="marker">
             <span className="text-sm font-semibold">{location}</span>
+            <img src="https://docs.mapbox.com/mapbox-gl-js/assets/cat.png" height={30} width={30}/>
           </div>
         </Marker>
       ))}
