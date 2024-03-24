@@ -2,6 +2,8 @@
 import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form";
 import { SearchIcon, LuggageIcon } from "lucide-react";
+import { PiggyBankIcon } from "lucide-react";
+import { generatePlan } from "@/lib/actions";
 import { BanknoteIcon } from "lucide-react";
 
 import {
@@ -17,10 +19,10 @@ import { Input } from "@/components/ui/input";
 import DatePickerWithRange from "@/components/home/date-picker-with-range";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import { BatteryFullIcon } from "lucide-react";
 import { BarChart } from "lucide-react";
 import { NavigationIcon } from "lucide-react";
 import { Wifi, WifiIcon } from "lucide-react";
+import { BatteryFullIcon } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -50,9 +52,11 @@ import { DateRange } from "react-day-picker";
 import { useEffect } from "react";
 
 interface FormData {
-  location: string;
-  style: string;
-  date: string;
+  destination: string;
+  travelStyle: string;
+  date: DateRange;
+  startDate: string;
+  endDate: string;
   budget: string;
   companion: string[];
 }
@@ -82,18 +86,21 @@ export default function Home() {
   const minutes = String(now.getMinutes()).padStart(2, "0");
   const form = useForm<FormData>({
     defaultValues: {
-      location: "",
-      style: "",
-      date: "",
+      destination: "",
+      travelStyle: "",
+      startDate: "",
+      endDate: "",
+      date: undefined,
       budget: "",
       companion: [],
     },
   });
 
-  const onSubmit = (data: any) => {
-    console.log(data);
-    // generatePlan(...);
-  };
+  const dateFormatted = new Intl.DateTimeFormat("en-US", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit"
+  });
 
   return (
     <main className="relative flex flex-col items-center rounded-t-2xl overflow-hidden">
@@ -128,12 +135,12 @@ export default function Home() {
         </div>
         <Form {...form}>
           <form
-            onSubmit={form.handleSubmit(onSubmit)}
+            action={generatePlan}
             className="w-full space-y-6"
           >
             <FormField
               control={form.control}
-              name="location"
+              name="destination"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-black/80">Where to?</FormLabel>
@@ -152,7 +159,7 @@ export default function Home() {
             />
             <FormField
               control={form.control}
-              name="style"
+              name="travelStyle"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Choose your travel style</FormLabel>
@@ -193,9 +200,15 @@ export default function Home() {
                 </FormItem>
               )}
             />
+            <FormField control={form.control} name="startDate" render={({ field }) => (
+                <input type="hidden" {...field} value={dateFormatted.format(selectedDate?.from)}/>
+            )} />
+
+            <FormField control={form.control} name="endDate" render={({ field }) => (
+                <input type="hidden" {...field} value={dateFormatted.format(selectedDate?.to)}/>
+            )} />
             <FormField
               control={form.control}
-              name="date"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Date</FormLabel>
@@ -205,7 +218,7 @@ export default function Home() {
                   <FormMessage />
                 </FormItem>
               )}
-            />
+             name="date"/>
             <FormField
               control={form.control}
               name="budget"
@@ -267,11 +280,9 @@ export default function Home() {
               )}
             />
             <div className="flex-1 w-full">
-              <Link href="/itinerary" passHref>
-                <Button className="bg-[#99BAEC] text-black w-full h-14 text-lg hover:bg-[#F2ECA4]">
-                  Generate Plan
-                </Button>
-              </Link>
+              <Button className="bg-[#99BAEC] text-black w-full h-14 text-lg hover:bg-[#F2ECA4]">
+                Generate Plan
+              </Button>
             </div>
           </form>
         </Form>

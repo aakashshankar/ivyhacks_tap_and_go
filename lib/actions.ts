@@ -17,7 +17,15 @@ export async function fetchCoords(locations: Locations) {
     return data.coordinates;
 }
 
-export async function generatePlan(destination: string, travelStyle: string, budget: string, companion: string, startDate: string, endDate: string) {
+export async function generatePlan(formData: FormData) {
+    console.log("Entering generatePlan function");
+    const destination = formData.get('destination') as string;
+    const travelStyle = formData.get('travelStyle') as string;
+    const budget = formData.get('budget') as string;
+    const companion = formData.get('companion') as string;
+    const startDate = formData.get('startDate') as string;
+    const endDate = formData.get('endDate') as string;
+
     const coordinatesResponse = await fetch('/api/cartesian', {
         method: 'POST',
         headers: {
@@ -55,6 +63,7 @@ export async function generatePlan(destination: string, travelStyle: string, bud
     }
 
     const data = await response.json();
+    console.log(data);
     return { locations: data.locations, itinerary: data.itinerary };
 }
 
