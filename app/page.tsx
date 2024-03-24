@@ -47,14 +47,14 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
+import { CalendarIcon, Check, ChevronsUpDown } from "lucide-react";
+import Link from "next/link";
+import { cn } from "@/lib/utils";
 import {
   Popover,
-  PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover";
-import { CalendarIcon, Check, ChevronsUpDown } from "lucide-react";
-import { cn } from "@/lib/utils";
-import Link from "next/link";
+  PopoverContent,
+} from "@radix-ui/react-popover";
 
 import { dateJotai } from "@/lib/jotai";
 import { useAtom } from "jotai";
@@ -239,34 +239,15 @@ export default function Home() {
                       <div className="absolute left-4 top-1/2 transform -translate-y-1/2">
                         <LuggageIcon className="w-5 h-5 text-[#2E2E29]" />
                       </div>
-                      <Input placeholder="Adventure" className="pl-12" {...field} />
+                      <Input
+                        placeholder="Adventure"
+                        className="pl-12"
+                        {...field}
+                      />
                     </div>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="startDate"
-              render={({ field }) => (
-                <input
-                  type="hidden"
-                  {...field}
-                  value={dateFormatted.format(selectedDate?.from)}
-                />
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="endDate"
-              render={({ field }) => (
-                <input
-                  type="hidden"
-                  {...field}
-                  value={dateFormatted.format(selectedDate?.to)}
-                />
               )}
             />
             <FormField
