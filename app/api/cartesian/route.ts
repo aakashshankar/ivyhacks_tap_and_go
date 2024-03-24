@@ -11,6 +11,7 @@ type Locations = Record<string, string[]>;
 export async function POST(req: NextRequest) {
   const body = await req.json();
   const { locations }: { locations: Locations } = body;
+  console.log("locations", locations);
 
   try {
     const coordinates: { [key: string]: number[][] } = {};

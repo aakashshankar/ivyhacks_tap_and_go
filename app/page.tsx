@@ -53,12 +53,13 @@ import {
 import { CalendarIcon, Check, ChevronsUpDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
+import { generatePlan } from "@/lib/actions";
 
 interface FormData {
   location: string;
   style: string;
-  from: Date;
-  to: Date;
+  startDate: Date;
+  endDate: Date;
   budget: string;
   companion: string[];
 }
@@ -82,8 +83,8 @@ export default function Home() {
     defaultValues: {
       location: "",
       style: "",
-      from: new Date(),
-      to: new Date(),
+      startDate: new Date(),
+      endDate: new Date(),
       budget: "",
       companion: [],
     },
@@ -115,7 +116,7 @@ export default function Home() {
   };
 
   return (
-    <main className="relative flex flex-col items-center rounded-t-2xl overflow-hidden">
+    <main className="relative flex flex-col items-center rounded-t-2xl overflow-y-scroll">
       {/* Background Image with Filters */}
       <div
         className="absolute h-[255px] w-full bg-cover bg-center bg-no-repeat sepia-30"
@@ -147,8 +148,9 @@ export default function Home() {
         </div>
         <Form {...form}>
           <form
-            onSubmit={form.handleSubmit(onSubmit)}
+            action={generatePlan}
             className="w-full space-y-6"
+            onSubmit={onSubmit}
           >
             <FormField
               control={form.control}
@@ -281,7 +283,7 @@ export default function Home() {
             /> */}
             <FormField
               control={form.control}
-              name="from"
+              name="startDate"
               render={({ field }) => (
                 <FormItem className="flex flex-col">
                   <FormLabel>From</FormLabel>
@@ -320,7 +322,7 @@ export default function Home() {
             />
             <FormField
               control={form.control}
-              name="to"
+              name="endDate"
               render={({ field }) => (
                 <FormItem className="flex flex-col">
                   <FormLabel>To</FormLabel>
@@ -349,7 +351,7 @@ export default function Home() {
                         selected={field.value}
                         onSelect={field.onChange}
                         disabled={(date) =>
-                          date < form.getValues("from") ||
+                          date < form.getValues("startDate") ||
                           date > add(new Date(), { days: 16 })
                         }
                         initialFocus
@@ -421,11 +423,11 @@ export default function Home() {
               )}
             />
             <div className="flex-1 w-full">
-              <Link href="/itinerary" passHref>
-                <Button className="bg-[#99BAEC] text-black w-full h-14 text-lg hover:bg-[#F2ECA4]">
+              {/* <Link href="/itinerary" passHref> */}
+                <Button className="bg-[#99BAEC] text-black w-full h-14 text-lg hover:bg-[#F2ECA4]" type="submit">
                   Generate Plan
                 </Button>
-              </Link>
+              {/* </Link> */}
             </div>
           </form>
         </Form>
