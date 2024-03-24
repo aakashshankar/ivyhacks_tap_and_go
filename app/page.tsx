@@ -17,14 +17,10 @@ import { Input } from "@/components/ui/input";
 import DatePickerWithRange from "@/components/home/date-picker-with-range";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import { Wifi, WifiIcon } from "lucide-react";
 import { BatteryFullIcon } from "lucide-react";
 import { BarChart } from "lucide-react";
 import { NavigationIcon } from "lucide-react";
 import { Wifi, WifiIcon } from "lucide-react";
-import { BatteryFullIcon } from "lucide-react";
-import { BarChart } from "lucide-react";
-import { NavigationIcon } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -48,6 +44,11 @@ import {
 } from "@/components/ui/command";
 import Link from "next/link";
 
+import { dateJotai } from "@/lib/jotai";
+import { useAtom } from "jotai";
+import { DateRange } from "react-day-picker";
+import { useEffect } from "react";
+
 interface FormData {
   location: string;
   style: string;
@@ -68,9 +69,14 @@ const companion = [
 ];
 
 export default function Home() {
-  const now = new Date();
-  const hours = String(now.getHours()).padStart(2, "0"); // Format hours to 2 digits
-  const minutes = String(now.getMinutes()).padStart(2, "0");
+  const [selectedDate, setSelectedDate] = useAtom<DateRange | undefined>(
+    dateJotai
+  );
+
+  useEffect(() => {
+    console.log(selectedDate);
+  }, [selectedDate]);
+
   const now = new Date();
   const hours = String(now.getHours()).padStart(2, "0"); // Format hours to 2 digits
   const minutes = String(now.getMinutes()).padStart(2, "0");

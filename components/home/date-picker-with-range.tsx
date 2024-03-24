@@ -13,6 +13,8 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { dateJotai } from "@/lib/jotai";
+import { useAtom } from "jotai";
 
 export default function DatePickerWithRange({
   className,
@@ -26,6 +28,13 @@ export default function DatePickerWithRange({
     from: new Date(year, month, day),
     to: addDays(new Date(year, month, day), 20),
   });
+  const [selectedDate, setSelectedDate] = useAtom<DateRange | undefined>(
+    dateJotai
+  );
+
+  React.useEffect(() => {
+    setSelectedDate(date);
+  }, [date]);
 
   return (
     <div className={cn("grid gap-2", className)}>
