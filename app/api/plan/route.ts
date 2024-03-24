@@ -6,7 +6,7 @@ const client = new Client({ apiKey: process.env.CLAUDE_API_KEY! });
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
-  const { destination, travelStyle, budget, companion, startDate, endDate } =
+  const { destination, travelStyle, budget, companion, startDate, endDate, weather } =
     body;
 
   const systemPrompt = `You are an AI-powered travel assistant that helps users plan their trips by generating personalized itineraries based on their preferences and constraints. Given the user's desired destination, travel style, budget, companion, and travel dates, your task is to suggest a list of recommended locations to visit for the given day of the trip.
@@ -14,10 +14,18 @@ export async function POST(req: NextRequest) {
 When generating the itinerary, consider the following:
 - Tailor the suggestions to the specified travel style (e.g., adventurous, relaxing, cultural) and budget (e.g., budget, moderate, luxury).
 - Take into account the companion type (e.g., solo, couple, family, friends) and suggest activities and locations suitable for that group.
+- Account for any weather or seasonal constraints that may impact the travel experience.
 - Ensure that the itinerary is feasible within the given travel dates and allows for a balanced mix of activities and rest.
 - Provide a diverse range of suggestions, including popular attractions, hidden gems, local experiences, and dining options.
 - Optimize the route to minimize travel time between locations while maximizing the overall experience.
 - Give only 3 suggested locations.
+
+The weather for the destination on each date (from start to end) is formatted as the following JSON: 
+{
+  "date": (date in UTC),
+  "weatherCode": (code that corresponds to the description)
+  "weatherType": (weather description)
+}
 
 For each suggested location, include the following:
 - location
@@ -34,7 +42,7 @@ In your generated text, only include the JSON object with the suggested activiti
 
 Let's generate an amazing personalized itinerary that will make the user's trip unforgettable!`;
 
-  const prompt = `Please suggest a travel itinerary for a ${travelStyle} ${budget} trip to ${destination} for ${companion}, from ${startDate} to ${endDate}.`;
+  const prompt = `Please suggest a travel itinerary for a ${travelStyle} ${budget} trip to ${destination} for ${companion}, from ${startDate} to ${endDate}. The weather at ${destination} is formatted as follows: \n${weather}.`;
 
   try {
     const response = await client.messages.create({
