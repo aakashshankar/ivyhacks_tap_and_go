@@ -32,12 +32,10 @@ export default function Page() {
         <MobileHeader isScroll={isScroll} backgroundColor="bg-[#F2ECA4]" />
         <div className="border-2 ">
           {/* SECOND HEADER SECTION */}
-          <div className="space-y-5 bg-[#F2ECA4]">
-            <div className="space-y-3 px-6">
-              <Link href="/">
-                <ArrowLeftIcon className="w-5 h-5" />
-              </Link>
-              <Header />
+          <div className="space-y-5 bg-[#F2ECA4] sticky left-0 top-10 z-50">
+            <div className={`space-y-3 px-6`}>
+              {/* ANIMATION */}
+              <Header isScroll={isScroll} />
             </div>
             <Separator className="bg-black/70" />
             <DateScroller />

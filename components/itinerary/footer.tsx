@@ -22,7 +22,7 @@ const Footer = () => {
         <div className="p-3 flex-1 border border-black rounded-full text-center hover:cursor-pointer">
           Regenerate
         </div>
-        <div className="p-3 flex-1 rounded-full text-center bg-[#99BAEC] hover:bg-[#F2ECA4] hover:cursor-pointer">
+        <div className="p-3 flex-1 rounded-full text-center bg-[#99BAEC] hover:cursor-pointer">
           Save Plan
         </div>
       </div>
