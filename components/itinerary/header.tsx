@@ -20,7 +20,7 @@ const Header = ({ isScroll }: HeaderProps) => {
             <div className="flex items-center justify-between">
               <div className="flex flex-col text-xl">
                 <p>Adventure Trip</p>
-                <p>to New York</p>
+                <p>to Paris</p>
               </div>
               <Link href="/itinerary/edit">
                 <div className="rounded-full bg-white p-2 shadow-md">
@@ -32,7 +32,7 @@ const Header = ({ isScroll }: HeaderProps) => {
           <section className="flex items-center justify-between">
             <div className="flex space-x-2">
               <CalendarDaysIcon className="w-5 h-5" />
-              <p>Mon, Mar 25 - Tue, Apr 2</p>
+              <p>Apr 1, 2024 - Apr 4, 2024</p>
             </div>
             <p>$ 500</p>
           </section>
