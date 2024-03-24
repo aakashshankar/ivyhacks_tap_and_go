@@ -44,7 +44,7 @@ const Footer = ({ isScroll }: FooterProps) => {
 
       <Separator className="bg-black" />
       <div className="p-4 flex space-x-2 justify-center">
-        <div className="p-3 flex-1 border border-black rounded-full text-center hover:cursor-pointer">
+        <div className="p-3 flex-1 border border-black rounded-full text-center hover:cursor-pointer hover:bg-[#F2ECA4] hover:border-[#F2ECA4]">
           Regenerate
         </div>
         <div className="p-3 flex-1 rounded-full text-center bg-[#99BAEC] hover:cursor-pointer">

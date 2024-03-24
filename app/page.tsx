@@ -268,7 +268,7 @@ export default function Home() {
             />
             <div className="flex-1 w-full">
               <Link href="/itinerary" passHref>
-                <Button className="bg-[#99BAEC] text-black w-full h-14 text-lg hover:bg-[#F2ECA4]">
+                <Button className="bg-[#99BAEC] text-black w-full h-14 text-lg hover:bg-[#99BAEC]/90">
                   Generate Plan
                 </Button>
               </Link>
