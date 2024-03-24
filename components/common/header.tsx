@@ -9,7 +9,7 @@ const Header = () => {
   const hours = now.getHours();
   const minutes = now.getMinutes();
   return (
-    <div className="flex items-center justify-between h-10 py-2">
+    <div className="flex items-center justify-between h-10 py-2 px-6">
       <div className="flex items-center space-x-1">
         <p className="text-sm">
           {hours}:{minutes}
