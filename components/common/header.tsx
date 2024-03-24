@@ -6,10 +6,10 @@ import { NavigationIcon } from "lucide-react";
 
 const Header = () => {
   const now = new Date();
-  const hours = now.getHours();
-  const minutes = now.getMinutes();
+  const hours = String(now.getHours()).padStart(2, "0"); // Format hours to 2 digits
+  const minutes = String(now.getMinutes()).padStart(2, "0"); // Format hours to 2 digits
   return (
-    <div className="flex items-center justify-between h-10 py-2 px-6">
+    <div className="flex items-center justify-between h-10 py-2 px-6 sticky top-0 z-50 ">
       <div className="flex items-center space-x-1">
         <p className="text-sm">
           {hours}:{minutes}

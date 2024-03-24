@@ -25,8 +25,7 @@ export default function RootLayout({
         ></link>
       </head>
       <body className={`${inter.className} flex justify-center`}>
-        <div className="w-full h-[844px] max-w-sm mx-auto border-2 my-5 rounded-xl bg-[#DEDEDE] overflow-y-auto">
-          <Header />
+        <div className="w-full h-[844px] max-w-sm mx-auto my-5 rounded-2xl bg-[#F0ECE4]">
           <div>{children}</div>
         </div>
       </body>
