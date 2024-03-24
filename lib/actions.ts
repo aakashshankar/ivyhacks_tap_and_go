@@ -65,18 +65,15 @@ export async function generatePlan(destination: string, travelStyle: string, bud
 
     const data = await response.json();
     const dbData = {
-        plan: {
-            destination,
-            travelStyle,
-            budget,
-            companion,
-            startDate,
-            endDate,
-            locations: data.locations,
-            itinerary: data.itinerary,
-            weather: forecast,
-            coordinates: destCoords,
-        },
+        destination,
+        travelStyle,
+        budget,
+        companion,
+        startDate,
+        endDate,
+        itin: data.locations,
+        weather: forecast,
+        coordinates: destCoords,
     };
     writeDbData(dbData);
     return { locations: data.locations, itinerary: data.itinerary };
