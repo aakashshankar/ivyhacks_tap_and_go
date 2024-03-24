@@ -11,7 +11,7 @@ const Header = ({ isScroll }: HeaderProps) => {
       <Link href="/" className="w-fit flex items-center">
         <ArrowLeftIcon className={`w-5 h-5 ${!isScroll && "mb-2"}`} />
         {isScroll && (
-          <p className="text-lg w-full pl-3">Adventure Trip to New York</p>
+          <p className="text-lg w-full pl-3">Adventure Trip to Paris</p>
         )}
       </Link>
       {!isScroll && (
