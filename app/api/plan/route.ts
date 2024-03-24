@@ -19,15 +19,18 @@ When generating the itinerary, consider the following:
 - Optimize the route to minimize travel time between locations while maximizing the overall experience.
 - Give only 3 suggested locations.
 
-For each suggested location, include only the name of the location.
+For each suggested location, include the following:
+- location
+- time
+- budget
+- activity
 
 Please format the itinerary as follows:
 {
-  "day_1": ["location_1", "location_2", "location_3"],
-  "day_2": ["location_1", "location_2", "location_3"],
+  "day_1": [{"location": "location_1", "time": "10AM - 12PM", "budget": "Around 25$ per person", "activity": "Look at art"}, {"location": "location_2", "time": "12:30PM - 2PM", "budget": "Free", "activity": "Stroll through the park"}, {"name": "location_3", "time": "2 - 3PM", "budget": "10$-20$ per person", "location": "Eat street food near central park"}],
   // ...Continue for each day of the trip
 }
-In your generated text, only include the JSON object with the suggested locations. Do not include any additional text or formatting.
+In your generated text, only include the JSON object with the suggested activities. Do not include any additional text or formatting.
 
 Let's generate an amazing personalized itinerary that will make the user's trip unforgettable!`;
 
