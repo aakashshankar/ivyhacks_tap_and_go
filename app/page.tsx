@@ -14,10 +14,13 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { toast } from "@/components/ui/use-toast";
 import DatePickerWithRange from "@/components/home/date-picker-with-range";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
+import { Wifi, WifiIcon } from "lucide-react";
+import { BatteryFullIcon } from "lucide-react";
+import { BarChart } from "lucide-react";
+import { NavigationIcon } from "lucide-react";
 import { Wifi, WifiIcon } from "lucide-react";
 import { BatteryFullIcon } from "lucide-react";
 import { BarChart } from "lucide-react";
@@ -68,6 +71,9 @@ export default function Home() {
   const now = new Date();
   const hours = String(now.getHours()).padStart(2, "0"); // Format hours to 2 digits
   const minutes = String(now.getMinutes()).padStart(2, "0");
+  const now = new Date();
+  const hours = String(now.getHours()).padStart(2, "0"); // Format hours to 2 digits
+  const minutes = String(now.getMinutes()).padStart(2, "0");
   const form = useForm<FormData>({
     defaultValues: {
       location: "",
@@ -80,6 +86,7 @@ export default function Home() {
 
   const onSubmit = (data: any) => {
     console.log(data);
+    // generatePlan(...);
   };
 
   return (
