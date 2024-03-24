@@ -44,7 +44,6 @@ import {
   CommandShortcut,
 } from "@/components/ui/command";
 import Link from "next/link";
-import Header from "@/components/common/header";
 
 interface FormData {
   location: string;

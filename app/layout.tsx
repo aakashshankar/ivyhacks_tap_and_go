@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import Header from "@/components/common/header";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -25,7 +24,7 @@ export default function RootLayout({
         ></link>
       </head>
       <body className={`${inter.className} flex justify-center`}>
-        <div className="w-full h-[844px] max-w-sm mx-auto my-5 rounded-2xl bg-[#F0ECE4]">
+        <div className="w-full h-[844px] max-w-sm mx-auto my-5 rounded-2xl bg-[#F0ECE4] overflow-hidden">
           <div>{children}</div>
         </div>
       </body>
