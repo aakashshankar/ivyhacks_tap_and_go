@@ -11,6 +11,8 @@ import { SearchIcon, LuggageIcon } from "lucide-react";
 import { PiggyBankIcon } from "lucide-react";
 import { generatePlan } from "@/lib/actions";
 import { BanknoteIcon } from "lucide-react";
+import { PlaceKit } from "@placekit/autocomplete-react";
+import "@placekit/autocomplete-js/dist/placekit-autocomplete.css";
 
 import {
   Form,
@@ -159,6 +161,12 @@ export default function Home() {
         <div className="text-2xl text-left pt-24 pb-8 font-bold text-black]">
           Plan Your Dream Journey Instantly!
         </div>
+        <PlaceKit
+          apiKey="pk_z8KeA+fPiXBq7qg0DYVNW2jLPGafgEdQY26OjFF3pUA="
+          options={{
+            types: ["city"],
+          }}
+        />
         <Form {...form}>
           <form
             action={generatePlan}
