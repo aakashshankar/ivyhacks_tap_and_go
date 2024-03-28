@@ -1,7 +1,15 @@
 "use client";
 import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
+import { z } from "zod";
+import { type DateRange } from "react-day-picker";
+import { add, format } from "date-fns";
 import { useForm } from "react-hook-form";
 import { SearchIcon, LuggageIcon } from "lucide-react";
+import { PiggyBankIcon } from "lucide-react";
+import { generatePlan } from "@/lib/actions";
 import { BanknoteIcon } from "lucide-react";
 
 import {
@@ -17,14 +25,10 @@ import { Input } from "@/components/ui/input";
 import DatePickerWithRange from "@/components/home/date-picker-with-range";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import { Wifi, WifiIcon } from "lucide-react";
-import { BatteryFullIcon } from "lucide-react";
 import { BarChart } from "lucide-react";
 import { NavigationIcon } from "lucide-react";
 import { Wifi, WifiIcon } from "lucide-react";
 import { BatteryFullIcon } from "lucide-react";
-import { BarChart } from "lucide-react";
-import { NavigationIcon } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -37,21 +41,31 @@ import {
 
 import {
   Command,
-  CommandDialog,
   CommandEmpty,
   CommandGroup,
   CommandInput,
   CommandItem,
   CommandList,
-  CommandSeparator,
-  CommandShortcut,
 } from "@/components/ui/command";
+import { CalendarIcon, Check, ChevronsUpDown } from "lucide-react";
 import Link from "next/link";
+import { cn } from "@/lib/utils";
+import {
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+} from "@radix-ui/react-popover";
+
+import { dateJotai } from "@/lib/jotai";
+import { useAtom } from "jotai";
+import { useEffect } from "react";
 
 interface FormData {
-  location: string;
+  destination: string;
   style: string;
-  date: string;
+  date: DateRange;
+  startDate: string;
+  endDate: string;
   budget: string;
   companion: string[];
 }
@@ -71,26 +85,51 @@ export default function Home() {
   const now = new Date();
   const hours = String(now.getHours()).padStart(2, "0"); // Format hours to 2 digits
   const minutes = String(now.getMinutes()).padStart(2, "0");
-  const now = new Date();
-  const hours = String(now.getHours()).padStart(2, "0"); // Format hours to 2 digits
-  const minutes = String(now.getMinutes()).padStart(2, "0");
   const form = useForm<FormData>({
     defaultValues: {
-      location: "",
+      destination: "",
       style: "",
-      date: "",
+      startDate: "",
+      endDate: "",
+      date: undefined,
       budget: "",
       companion: [],
     },
   });
 
+  const locations = [
+    { label: "New York", value: "new york" },
+    { label: "Seoul", value: "seoul" },
+    { label: "Mumbai", value: "mumbai" },
+    { label: "Barcelona", value: "barcelona" },
+    { label: "Paris", value: "paris" },
+    { label: "Rome", value: "rome" },
+    { label: "Istanbul", value: "istanbul" },
+    { label: "Sydney", value: "sydney" },
+    { label: "Tokyo", value: "tokyo" },
+    { label: "Hong Kong", value: "hong kong" },
+  ] as const;
+
   const onSubmit = (data: any) => {
-    console.log(data);
+    console.log(form.getValues());
     // generatePlan(...);
   };
+  const dateFormatted = new Intl.DateTimeFormat("en-US", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  });
+
+  const [selectedDate, setSelectedDate] = useAtom<DateRange | undefined>(
+    dateJotai
+  );
+
+  useEffect(() => {
+    console.log(selectedDate);
+  }, [selectedDate]);
 
   return (
-    <main className="relative flex flex-col items-center rounded-t-2xl overflow-hidden">
+    <main className="relative flex flex-col items-center rounded-t-2xl overflow-y-scroll">
       {/* Background Image with Filters */}
       <div
         className="absolute h-[255px] w-full bg-cover bg-center bg-no-repeat sepia-30"
@@ -122,12 +161,13 @@ export default function Home() {
         </div>
         <Form {...form}>
           <form
-            onSubmit={form.handleSubmit(onSubmit)}
+            action={generatePlan}
             className="w-full space-y-6"
+            onSubmit={onSubmit}
           >
             <FormField
               control={form.control}
-              name="location"
+              name="destination"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-black/80">Where to?</FormLabel>
@@ -137,7 +177,11 @@ export default function Home() {
                       <div className="absolute left-4 top-1/2 transform -translate-y-1/2">
                         <SearchIcon className="w-5 h-5 text-[#2E2E29]" />
                       </div>
-                      <Input placeholder="Search a city" className="pl-12" />
+                      <Input
+                        placeholder="Search a city"
+                        className="pl-12"
+                        {...field}
+                      />
                     </div>
                   </FormControl>
                   <FormMessage />
@@ -148,40 +192,59 @@ export default function Home() {
               control={form.control}
               name="style"
               render={({ field }) => (
+                // <FormItem>
+                //   <FormLabel>Choose your travel style</FormLabel>
+                //   <Select
+                //     onValueChange={field.onChange}
+                //     defaultValue={field.value}
+                //   >
+                //     <FormControl>
+                //       <SelectTrigger className="w-full relative">
+                //         <div className="absolute left-4 top-1/2 transform -translate-y-1/2 z-10">
+                //           <LuggageIcon className="text-[#2E2E29] w-5 h-5" />
+                //         </div>
+                //         <div className="flex items-center pl-10 pr-4 py-2">
+                //           <SelectValue
+                //             placeholder="Travel style"
+                //             className="placeholder:text-left flex-1"
+                //           />
+                //         </div>
+                //       </SelectTrigger>
+                //     </FormControl>
+                //     <SelectContent>
+                //       <SelectGroup>
+                //         <SelectItem value="adventure">
+                //           Adventure Travel
+                //         </SelectItem>
+                //         <SelectItem value="foodie">Foodie Travel</SelectItem>
+                //         <SelectItem value="wellness">
+                //           Wellness Travel
+                //         </SelectItem>
+                //         <SelectItem value="accommodation">
+                //           Accommodation Focused
+                //         </SelectItem>
+                //         <SelectItem value="culture">
+                //           Cultural Exploration
+                //         </SelectItem>
+                //         <SelectItem value="slow">Slow Travel</SelectItem>
+                //       </SelectGroup>
+                //     </SelectContent>
+                //   </Select>
+                //   <FormMessage />
+                // </FormItem>
                 <FormItem>
-                  <FormLabel>Choose your travel style</FormLabel>
+                  <FormLabel>Travel Style</FormLabel>
                   <FormControl>
-                    <Select>
-                      <SelectTrigger className="w-full relative">
-                        <div className="absolute left-4 top-1/2 transform -translate-y-1/2 z-10">
-                          <LuggageIcon className="text-[#2E2E29] w-5 h-5" />
-                        </div>
-                        <div className="flex items-center pl-10 pr-4 py-2">
-                          <SelectValue
-                            placeholder="Travel style"
-                            className="placeholder:text-left flex-1"
-                          />
-                        </div>
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectGroup>
-                          <SelectItem value="adventure">
-                            Adventure Travel
-                          </SelectItem>
-                          <SelectItem value="foodie">Foodie Travel</SelectItem>
-                          <SelectItem value="wellness">
-                            Wellness Travel
-                          </SelectItem>
-                          <SelectItem value="accommodation">
-                            Accommodation Focused
-                          </SelectItem>
-                          <SelectItem value="culture">
-                            Cultural Exploration
-                          </SelectItem>
-                          <SelectItem value="slow">Slow Travel</SelectItem>
-                        </SelectGroup>
-                      </SelectContent>
-                    </Select>
+                    <div className="w-full relative">
+                      <div className="absolute left-4 top-1/2 transform -translate-y-1/2">
+                        <LuggageIcon className="w-5 h-5 text-[#2E2E29]" />
+                      </div>
+                      <Input
+                        placeholder="Adventure"
+                        className="pl-12"
+                        {...field}
+                      />
+                    </div>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -189,7 +252,6 @@ export default function Home() {
             />
             <FormField
               control={form.control}
-              name="date"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Date</FormLabel>
@@ -199,6 +261,7 @@ export default function Home() {
                   <FormMessage />
                 </FormItem>
               )}
+              name="date"
             />
             <FormField
               control={form.control}
@@ -211,7 +274,7 @@ export default function Home() {
                       <div className="absolute left-4 top-1/2 transform -translate-y-1/2">
                         <BanknoteIcon className="w-5 h-5 text-[#2E2E29]" />
                       </div>
-                      <Input placeholder="500" className="pl-12" />
+                      <Input placeholder="500" className="pl-12" {...field} />
                     </div>
                   </FormControl>
                   <FormMessage />
@@ -261,11 +324,9 @@ export default function Home() {
               )}
             />
             <div className="flex-1 w-full">
-              <Link href="/itinerary" passHref>
-                <Button className="bg-[#99BAEC] text-black w-full h-14 text-lg hover:bg-[#F2ECA4]">
-                  Generate Plan
-                </Button>
-              </Link>
+              <Button className="bg-[#99BAEC] text-black w-full h-14 text-lg hover:bg-[#F2ECA4]">
+                Generate Plan
+              </Button>
             </div>
           </form>
         </Form>
