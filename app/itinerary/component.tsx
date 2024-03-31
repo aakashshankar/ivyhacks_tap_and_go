@@ -23,11 +23,28 @@ export default function Component({ data }: { data: any }) {
       setIsScroll(false);
     }
   };
+  // function to get day from itin based on active date
+  //
+  const getDayFromItin = (activeDate: Date): any[] => {
+    const startDate = new Date(data.startDate);
+    const dayNumber =
+      Math.floor(
+        (activeDate.getTime() - startDate.getTime()) / (1000 * 3600 * 24),
+      ) + 1;
+    const key = `day_${dayNumber}`;
+    return data.itin[key];
+  };
+
   const [activeDate, setActiveDate] = useState(new Date(data.startDate));
+  const [activeItinerary, setActiveItinerary] = useState(
+    getDayFromItin(activeDate),
+  );
 
   const handleDateClick = (date: Date) => {
     setActiveDate(date);
+    setActiveItinerary(getDayFromItin(date));
   };
+
   return (
     <ScrollArea.Root className="h-[844px]">
       <ScrollArea.Viewport className="h-full w-full" onScroll={handleScroll}>
@@ -50,9 +67,9 @@ export default function Component({ data }: { data: any }) {
           </div>
           <Map />
           <div>
-            {Array.from({ length: 5 }, (_, index) => (
+            {activeItinerary.map((itin, index) => (
               <div key={index}>
-                <ItineraryList />
+                <ItineraryList itinerary={itin} label={index} />
                 <MoveType />
               </div>
             ))}
