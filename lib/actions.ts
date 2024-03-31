@@ -1,6 +1,13 @@
 "use server";
 import { redirect } from "next/navigation";
-import { Locations, Coordinates, Profile, WeatherForecast } from "./types";
+import type {
+  Locations,
+  Coordinates,
+  Profile,
+  WeatherForecast,
+  ClaudeAPIResponse,
+  DbData,
+} from "./types";
 import { writeFile, mkdir } from "node:fs/promises";
 
 export async function fetchCoords(locations: Locations) {
@@ -46,16 +53,11 @@ export async function generatePlan(formData: FormData) {
   const coordinatesData = await coordinatesResponse.json();
   const destCoords = coordinatesData.coordinates[0][0];
 
-  console.log("destCoords", destCoords);
-
   // Format date into YYYY-MM-DD
   const [month, day, year] = startDate.split("/");
   let d1 = `${year}-${month}-${day}`;
   const [month2, day2, year2] = endDate.split("/");
   let d2 = `${year2}-${month2}-${day2}`;
-
-  console.log("d1", d1);
-  console.log("d2", d2);
 
   const weather = await fetch(
     process.env.NEXT_PUBLIC_SERVER_URL +
@@ -69,8 +71,6 @@ export async function generatePlan(formData: FormData) {
   );
   const weatherData = await weather.json();
   const forecast: WeatherForecast = weatherData.weatherForecast;
-
-  console.log("forecast", forecast);
 
   const response = await fetch(
     process.env.NEXT_PUBLIC_SERVER_URL + "/api/plan",
@@ -95,18 +95,50 @@ export async function generatePlan(formData: FormData) {
     throw new Error("Failed to generate plan");
   }
 
-  const data = await response.json();
+  const data: ClaudeAPIResponse = await response.json();
 
-  const dbData = {
+  const updatedLocations: Locations = {};
+
+  await Promise.all(
+    Object.entries(data.locations).map(async ([day, locations]) => {
+      const updatedLocationsForDay = await Promise.all(
+        locations.map(async (location) => {
+          const coordinatesResponse = await fetch(
+            process.env.NEXT_PUBLIC_SERVER_URL + "/api/cartesian",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                locations: { destination: [location.location] },
+              }),
+            },
+          );
+          if (!coordinatesResponse.ok) {
+            throw new Error("Failed to get destination coordinates");
+          }
+          const coordinatesData = await coordinatesResponse.json();
+          const coordinates = coordinatesData.coordinates[0][0];
+          return {
+            ...location,
+            coordinates,
+          };
+        }),
+      );
+      updatedLocations[day] = updatedLocationsForDay;
+    }),
+  );
+
+  const dbData: DbData = {
     destination,
     style,
     budget,
     companion,
     startDate,
     endDate,
-    itin: data.locations,
+    itin: updatedLocations,
     weather: forecast,
-    coordinates: destCoords,
   };
   writeDbData(dbData);
 
