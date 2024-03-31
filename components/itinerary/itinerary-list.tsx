@@ -13,7 +13,6 @@ type HeaderProps = {
 };
 const ItineraryList = ({ itinerary, label }: HeaderProps) => {
   const [isOpen, setIsOpen] = React.useState(false);
-  console.log(label);
   return (
     <div className="p-3 bg-white">
       {/* Title */}
