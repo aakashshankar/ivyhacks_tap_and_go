@@ -1,21 +1,14 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
-import { z } from "zod";
 import { type DateRange } from "react-day-picker";
-import { add, format } from "date-fns";
 import { useForm } from "react-hook-form";
 import { SearchIcon, LuggageIcon } from "lucide-react";
-import { PiggyBankIcon } from "lucide-react";
 import { generatePlan } from "@/lib/actions";
 import { BanknoteIcon } from "lucide-react";
 
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -24,37 +17,10 @@ import {
 import { Input } from "@/components/ui/input";
 import DatePickerWithRange from "@/components/home/date-picker-with-range";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Label } from "@/components/ui/label";
 import { BarChart } from "lucide-react";
 import { NavigationIcon } from "lucide-react";
-import { Wifi, WifiIcon } from "lucide-react";
+import { WifiIcon } from "lucide-react";
 import { BatteryFullIcon } from "lucide-react";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command";
-import { CalendarIcon, Check, ChevronsUpDown } from "lucide-react";
-import Link from "next/link";
-import { cn } from "@/lib/utils";
-import {
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
-} from "@radix-ui/react-popover";
 
 import { dateJotai } from "@/lib/jotai";
 import { useAtom } from "jotai";
@@ -121,42 +87,44 @@ export default function Home() {
   });
 
   const [selectedDate, setSelectedDate] = useAtom<DateRange | undefined>(
-    dateJotai
+    dateJotai,
   );
 
   useEffect(() => {
     console.log(selectedDate);
+    form.setValue("startDate", dateFormatted.format(selectedDate?.from));
+    form.setValue("endDate", dateFormatted.format(selectedDate?.to));
   }, [selectedDate]);
 
   return (
-    <main className="relative flex flex-col items-center rounded-t-2xl overflow-y-scroll">
+    <main className="relative flex flex-col items-center overflow-y-scroll rounded-t-2xl">
       {/* Background Image with Filters */}
       <div
-        className="absolute h-[255px] w-full bg-cover bg-center bg-no-repeat sepia-30"
+        className="sepia-30 absolute h-[255px] w-full bg-cover bg-center bg-no-repeat"
         style={{
           backgroundImage: "url('/assets/images/new-york.jpg')",
           filter: "contrast(50%) saturate(40%)",
         }}
       ></div>
       {/* Gradient Overlay */}
-      <div className="absolute top-0 left-0 right-0 h-[255px] bg-gradient-to-b from-[#F7F1BA] via-transparent to-[#F0ECE4] rounded-t-2xl"></div>
+      <div className="absolute left-0 right-0 top-0 h-[255px] rounded-t-2xl bg-gradient-to-b from-[#F7F1BA] via-transparent to-[#F0ECE4]"></div>
       {/* HEADER */}
-      <div className="relative z-50 flex flex-col h-full w-full px-6">
-        <div className="flex items-center justify-between h-10 my-4 px-6 sticky top-2 z-50 w-full">
+      <div className="relative z-50 flex h-full w-full flex-col px-6">
+        <div className="sticky top-2 z-50 my-4 flex h-10 w-full items-center justify-between px-6">
           <div className="flex items-center space-x-1">
             <p className="text-sm">
               {hours}:{minutes}
             </p>
-            <NavigationIcon className="w-3 h-3" fill="black" />
+            <NavigationIcon className="h-3 w-3" fill="black" />
           </div>
 
           <div className="flex items-center space-x-1">
-            <BarChart className="w-5 h-5" />
-            <WifiIcon className="w-5 h-5" />
-            <BatteryFullIcon className="w-5 h-5" />
+            <BarChart className="h-5 w-5" />
+            <WifiIcon className="h-5 w-5" />
+            <BatteryFullIcon className="h-5 w-5" />
           </div>
         </div>
-        <div className="text-2xl text-left pt-24 pb-8 font-bold text-black]">
+        <div className="text-black] pb-8 pt-24 text-left text-2xl font-bold">
           Plan Your Dream Journey Instantly!
         </div>
         <Form {...form}>
@@ -173,9 +141,9 @@ export default function Home() {
                   <FormLabel className="text-black/80">Where to?</FormLabel>
                   <FormControl>
                     {/* <Input placeholder="New York, NY" {...field} /> */}
-                    <div className="w-full relative">
-                      <div className="absolute left-4 top-1/2 transform -translate-y-1/2">
-                        <SearchIcon className="w-5 h-5 text-[#2E2E29]" />
+                    <div className="relative w-full">
+                      <div className="absolute left-4 top-1/2 -translate-y-1/2 transform">
+                        <SearchIcon className="h-5 w-5 text-[#2E2E29]" />
                       </div>
                       <Input
                         placeholder="Search a city"
@@ -235,9 +203,9 @@ export default function Home() {
                 <FormItem>
                   <FormLabel>Travel Style</FormLabel>
                   <FormControl>
-                    <div className="w-full relative">
-                      <div className="absolute left-4 top-1/2 transform -translate-y-1/2">
-                        <LuggageIcon className="w-5 h-5 text-[#2E2E29]" />
+                    <div className="relative w-full">
+                      <div className="absolute left-4 top-1/2 -translate-y-1/2 transform">
+                        <LuggageIcon className="h-5 w-5 text-[#2E2E29]" />
                       </div>
                       <Input
                         placeholder="Adventure"
@@ -265,14 +233,38 @@ export default function Home() {
             />
             <FormField
               control={form.control}
+              name="startDate"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Input type="hidden" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="endDate"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Input type="hidden" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
               name="budget"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Budget</FormLabel>
                   <FormControl>
-                    <div className="w-full relative">
-                      <div className="absolute left-4 top-1/2 transform -translate-y-1/2">
-                        <BanknoteIcon className="w-5 h-5 text-[#2E2E29]" />
+                    <div className="relative w-full">
+                      <div className="absolute left-4 top-1/2 -translate-y-1/2 transform">
+                        <BanknoteIcon className="h-5 w-5 text-[#2E2E29]" />
                       </div>
                       <Input placeholder="500" className="pl-12" {...field} />
                     </div>
@@ -306,8 +298,8 @@ export default function Home() {
                                     ? field.onChange([...field.value, item.id])
                                     : field.onChange(
                                         field.value?.filter(
-                                          (value) => value !== item.id
-                                        )
+                                          (value) => value !== item.id,
+                                        ),
                                       );
                                 }}
                               />
@@ -323,8 +315,11 @@ export default function Home() {
                 </FormItem>
               )}
             />
-            <div className="flex-1 w-full">
-              <Button className="bg-[#99BAEC] text-black w-full h-14 text-lg hover:bg-[#F2ECA4]">
+            <div className="w-full flex-1">
+              <Button
+                className="h-14 w-full bg-[#99BAEC] text-lg text-black hover:bg-[#F2ECA4]"
+                type="submit"
+              >
                 Generate Plan
               </Button>
             </div>

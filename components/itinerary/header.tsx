@@ -4,8 +4,16 @@ import { ArrowLeftIcon, PencilIcon } from "lucide-react";
 import { CalendarDaysIcon } from "lucide-react";
 interface HeaderProps {
   isScroll: boolean;
+  data: {
+    style: string;
+    destination: string;
+    startDate: string;
+    endDate: string;
+    budget: number;
+  };
 }
-const Header = ({ isScroll }: HeaderProps) => {
+const Header = ({ isScroll, data }: HeaderProps) => {
+  const { style, destination, startDate, endDate, budget } = data;
   return (
     <div>
       <Link href="/" className="w-fit flex items-center">
@@ -19,8 +27,8 @@ const Header = ({ isScroll }: HeaderProps) => {
           <section>
             <div className="flex items-center justify-between">
               <div className="flex flex-col text-xl">
-                <p>Adventure Trip</p>
-                <p>to Paris</p>
+                <p>{style} Trip</p>
+                <p>to {destination}</p>
               </div>
               <Link href="/itinerary/edit">
                 <div className="rounded-full bg-white p-2 shadow-md">
@@ -32,9 +40,11 @@ const Header = ({ isScroll }: HeaderProps) => {
           <section className="flex items-center justify-between">
             <div className="flex space-x-2">
               <CalendarDaysIcon className="w-5 h-5" />
-              <p>Apr 1, 2024 - Apr 4, 2024</p>
+              <p>
+                {startDate} - {endDate}
+              </p>
             </div>
-            <p>$ 500</p>
+            <p>$ {budget}</p>
           </section>
         </div>
       )}

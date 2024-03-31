@@ -1,4 +1,5 @@
 // app/api/generatePlan.ts
+"use server";
 import Client from "@anthropic-ai/sdk";
 import { NextRequest } from "next/server";
 
@@ -14,8 +15,15 @@ const client = new Client({ apiKey: process.env.CLAUDE_API_KEY! });
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
-  const { destination, travelStyle, budget, companion, startDate, endDate, weather } =
-    body;
+  const {
+    destination,
+    travelStyle,
+    budget,
+    companion,
+    startDate,
+    endDate,
+    weather,
+  } = body;
 
   const systemPrompt = `You are an AI-powered travel assistant that helps users plan their trips by generating personalized itineraries based on their preferences and constraints. Given the user's desired destination, travel style, budget, companion, and travel dates, your task is to suggest a list of recommended locations to visit for the given day of the trip.
 
@@ -28,7 +36,7 @@ When generating the itinerary, consider the following:
 - Optimize the route to minimize travel time between locations while maximizing the overall experience.
 - Give only 3 suggested locations.
 
-The weather for the destination on each date (from start to end) is formatted as the following JSON: 
+The weather for the destination on each date (from start to end) is formatted as the following JSON:
 {
   "date": (date in UTC),
   "weatherCode": (code that corresponds to the description)
