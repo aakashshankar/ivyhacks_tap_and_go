@@ -10,10 +10,19 @@ type Coordinates = [number, number];
 type Profile = "driving" | "walking" | "cycling" | "driving-traffic";
 export async function POST(req: NextRequest) {
   const body = await req.json();
-  const { startCoordinates, endCoordinates, profile }: { startCoordinates: Coordinates; endCoordinates: Coordinates; profile: Profile } = body;
-  console.log(startCoordinates, endCoordinates, profile)
+  const {
+    startCoordinates,
+    endCoordinates,
+    profile,
+  }: {
+    startCoordinates: Coordinates;
+    endCoordinates: Coordinates;
+    profile: Profile;
+  } = body;
+  console.log(startCoordinates, endCoordinates, profile);
   try {
-    const response = await directionsClient.getDirections({
+    const response = await directionsClient
+      .getDirections({
         profile: profile,
         waypoints: [
           { coordinates: startCoordinates },
@@ -22,9 +31,9 @@ export async function POST(req: NextRequest) {
         geometries: "geojson",
       })
       .send();
-    
+
     console.log(response.body);
-    
+
     const route = response.body.routes[0];
     const geometry = route.geometry;
 

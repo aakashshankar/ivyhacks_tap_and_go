@@ -6,10 +6,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useState, useCallback } from "react";
 import { z } from "zod";
 import { type DateRange } from "react-day-picker";
-import { add, format } from "date-fns";
 import { useForm } from "react-hook-form";
 import { SearchIcon, LuggageIcon } from "lucide-react";
-import { PiggyBankIcon } from "lucide-react";
 import { generatePlan } from "@/lib/actions";
 import { BanknoteIcon } from "lucide-react";
 import { PlaceKit } from "@placekit/autocomplete-react";
@@ -18,7 +16,6 @@ import "@placekit/autocomplete-js/dist/placekit-autocomplete.css";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -27,37 +24,10 @@ import {
 import { Input } from "@/components/ui/input";
 import DatePickerWithRange from "@/components/home/date-picker-with-range";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Label } from "@/components/ui/label";
 import { BarChart } from "lucide-react";
 import { NavigationIcon } from "lucide-react";
-import { Wifi, WifiIcon } from "lucide-react";
+import { WifiIcon } from "lucide-react";
 import { BatteryFullIcon } from "lucide-react";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command";
-import { CalendarIcon, Check, ChevronsUpDown } from "lucide-react";
-import Link from "next/link";
-import { cn } from "@/lib/utils";
-import {
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
-} from "@radix-ui/react-popover";
 
 import { dateJotai } from "@/lib/jotai";
 import { useAtom } from "jotai";
@@ -79,17 +49,17 @@ export default function Home() {
   // ] as const;
 
   return (
-    <main className="relative flex flex-col items-center rounded-t-2xl overflow-y-scroll">
+    <main className="relative flex flex-col items-center overflow-y-scroll rounded-t-2xl">
       {/* Background Image with Filters */}
       <div
-        className="absolute h-[255px] w-full bg-cover bg-center bg-no-repeat sepia-30"
+        className="sepia-30 absolute h-[255px] w-full bg-cover bg-center bg-no-repeat"
         style={{
           backgroundImage: "url('/assets/images/new-york.jpg')",
           filter: "contrast(50%) saturate(40%)",
         }}
       ></div>
       {/* Gradient Overlay */}
-      <div className="absolute top-0 left-0 right-0 h-[255px] bg-gradient-to-b from-[#F7F1BA] via-transparent to-[#F0ECE4] rounded-t-2xl"></div>
+      <div className="absolute left-0 right-0 top-0 h-[255px] rounded-t-2xl bg-gradient-to-b from-[#F7F1BA] via-transparent to-[#F0ECE4]"></div>
       {/* HEADER */}
       <div className="relative z-50 flex flex-col h-full w-full px-6">
         <div className="text-2xl text-left py-24 font-bold text-black]">
