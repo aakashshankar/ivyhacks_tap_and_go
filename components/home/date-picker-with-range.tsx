@@ -44,11 +44,11 @@ export default function DatePickerWithRange({
             id="date"
             variant={"outline"}
             className={cn(
-              "w-[300px] justify-start text-left font-normal h-11",
+              "w-[300px] justify-start text-left font-normal h-11 rounded-2xl",
               !date && "text-muted-foreground"
             )}
           >
-            <CalendarIcon className="mr-2 h-5 w-5" />
+            <CalendarIcon className="mr-4 h-5 w-5" />
             {date?.from ? (
               date.to ? (
                 <>
