@@ -26,7 +26,7 @@ const DateScroller = ({
   }
 
   return (
-    <Carousel className="w-full max-w-sm text-center">
+    <Carousel className="w-full max-w-sm text-center py-4">
       <CarouselContent className="-ml-2">
         {dates.map((date, index) => (
           <CarouselItem

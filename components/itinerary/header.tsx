@@ -15,15 +15,24 @@ interface HeaderProps {
 const Header = ({ isScroll, data }: HeaderProps) => {
   const { style, destination, startDate, endDate, budget } = data;
   return (
-    <div>
+    <div
+      className={`${isScroll && "flex justify-between items-center w-full"}`}
+    >
       <Link href="/" className="w-fit flex items-center">
-        <ArrowLeftIcon className={`w-5 h-5 ${!isScroll && "mb-2"}`} />
+        <ArrowLeftIcon className={`w-5 h-5 ${!isScroll && "mb-4"}`} />
         {isScroll && (
           <p className="text-lg w-full pl-3">Adventure Trip to Paris</p>
         )}
       </Link>
+      {isScroll && (
+        <Link href="/itinerary/edit">
+          <div className="rounded-full bg-white p-2 shadow-md">
+            <PencilIcon className="w-4 h-4" />
+          </div>
+        </Link>
+      )}
       {!isScroll && (
-        <div className=" space-y-2">
+        <div className="space-y-4">
           <section>
             <div className="flex items-center justify-between">
               <div className="flex flex-col text-xl">
