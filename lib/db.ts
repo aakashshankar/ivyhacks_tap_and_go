@@ -1,19 +1,21 @@
-import { Pool } from 'pg';
-import { drizzle } from 'drizzle-orm/node-postgres';
-import { Pool as DrizzlePool } from 'drizzle-orm/node-postgres/pool';
-import { schema } from './schema';
+import { drizzle } from 'drizzle-orm/postgres-js';
+import { migrate } from 'drizzle-orm/postgres-js/migrator';
+import postgres from 'postgres';
+import drizzleConfig from '@/drizzle.config';
 
-let pool: Pool | null = null;
+const { dbCredentials } = drizzleConfig;
+const { connectionString } = dbCredentials;
 
-export function getPool() {
-  if (!pool) {
-    pool = new Pool({
-      connectionString: process.env.POSTGRES_CONNECTION_STRING,
-    });
-  }
-  return pool;
-}
+// For migrations
+const migrationClient = postgres(connectionString, { max: 1 });
+(async () => {
+    // Run migrations
+    await migrate(drizzle(migrationClient), { migrationsFolder: "../drizzle" });
+    // Here you can add any additional setup or initialization code
+})();
 
-export const db = drizzle(getPool() as DrizzlePool);
+const queryClient = postgres(connectionString);
+const db = drizzle(queryClient);
 
-export { schema };
+// Should I export the migrationClient as well?
+export default db;
