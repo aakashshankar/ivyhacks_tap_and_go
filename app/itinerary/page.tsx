@@ -30,13 +30,13 @@ export default function Page() {
   return (
     <>
       <Toaster />
-      <ScrollArea.Root className="h-[844px]">
+      <ScrollArea.Root className="h-[940px]">
         <ScrollArea.Viewport className="h-full w-full" onScroll={handleScroll}>
-          <MobileHeader isScroll={isScroll} backgroundColor="bg-[#F2ECA4]" />
+          {/* <MobileHeader isScroll={isScroll} backgroundColor="bg-[#F2ECA4]" /> */}
           <div className="">
             {/* SECOND HEADER SECTION */}
-            <div className="space-y-5 bg-[#F2ECA4] sticky left-0 top-10 z-50">
-              <div className={`space-y-3 px-6`}>
+            <div className="bg-[#F2ECA4] sticky left-0 top-0 z-50">
+              <div className={`${!isScroll ? "p-6" : "p-4"}`}>
                 {/* ANIMATION */}
                 <Header isScroll={isScroll} />
               </div>

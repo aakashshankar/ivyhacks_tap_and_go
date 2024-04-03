@@ -50,7 +50,7 @@ const Footer = ({ isScroll }: FooterProps) => {
         </div>
         <div
           onClick={() => toast.success("Successfully saved!")}
-          className="p-3 flex-1 rounded-full text-center bg-[#99BAEC] hover:cursor-pointer"
+          className="p-3 flex-1 rounded-full text-center bg-[#99BAEC] hover:cursor-pointer hover:bg-[#99BAEC]/90"
         >
           Save Plan
         </div>

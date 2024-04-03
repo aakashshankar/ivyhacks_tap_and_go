@@ -86,6 +86,9 @@ export default function Page() {
         </div>
         <Separator className="bg-black/70 my-4" />
         <TravelForm buttonText="Save Plan" />
+        <div className="text-sm text-center underline underline-offset-1 mt-3 hover:cursor-pointer">
+          Log Out
+        </div>
       </div>
     </main>
   );
