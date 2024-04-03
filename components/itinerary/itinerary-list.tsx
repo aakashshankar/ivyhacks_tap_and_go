@@ -5,24 +5,24 @@ import { ClockIcon } from "lucide-react";
 import { HourglassIcon } from "lucide-react";
 import { BanknoteIcon } from "lucide-react";
 import { MapPinIcon } from "lucide-react";
+import { Itinerary } from "@/app/api/plan/route";
 import { Badge } from "@/components/ui/badge";
 
-const ItineraryList = () => {
+type HeaderProps = {
+  itinerary: Itinerary;
+  label: number;
+};
+const ItineraryList = ({ itinerary, label }: HeaderProps) => {
   const [isOpen, setIsOpen] = React.useState(false);
   return (
     <div className="px-3 py-6 bg-white">
       {/* Title */}
-      <div className="grid grid-cols-8 gap-2 items-center">
-        <div className="col-span-1 flex justify-center">
-          <div
-            className="bg-[#99BAEC] rounded-full text-center font-bold p-2 flex items-center justify-center text-sm"
-            style={{ width: "1.5rem", height: "1.5rem" }}
-          >
-            1
-          </div>
+      <div className="grid grid-cols-8 gap-2">
+        <div className="p-1 bg-[#99BAEC] rounded-full text-center font-bold">
+          {label + 1}
         </div>
         <div className="col-span-6 text-left font-bold ml-2 text-lg">
-          Museum of Modern Art
+          {itinerary.location}
         </div>
 
         <div className="col-span-1 flex justify-center">
@@ -55,21 +55,19 @@ const ItineraryList = () => {
       <div className="space-y-2 ml-2 text-sm mt-2">
         {isOpen && (
           <div className="grid grid-cols-8 gap-2 text-gray-700">
-            <div className="col-start-2 col-span-full flex items-center py-1 mb-2">
-              <div>
-                Explore the collections of modern and contemporary art,
-                including works by Van Gogh, Warhol, and Picasso.
-              </div>
+            <div className="col-start-2 col-span-full flex items-center py-1">
+              <div>{itinerary.activity}</div>
             </div>
           </div>
         )}
 
-        <div className="grid grid-cols-8 gap-2 font-semibold mt-2">
-          <div className="col-start-2 col-span-full flex items-center space-x-2">
-            <ClockIcon className="w-5 h-5" />
-            <p>09:00 am - 06:00 pm</p>
-          </div>
-        </div>
+        {/* <div className="grid grid-cols-8 gap-2 font-semibold"> */}
+        {/*   <div className="col-start-2 col-span-full flex items-center space-x-2"> */}
+        {/*     <ClockIcon className="w-5 h-5" /> */}
+        {/*     <p>{itinerary.time}</p> */}
+        {/*   </div> */}
+        {/* </div> */}
+        {/*TODO: we should fetch the full address from mapbox and store in db. */}
         {isOpen && (
           <div className="grid grid-cols-8 gap-2 font-semibold">
             <div className="col-start-2 col-span-full flex items-center space-x-2">
@@ -80,14 +78,14 @@ const ItineraryList = () => {
         )}
 
         <div className="grid grid-cols-8 gap-2 font-semibold">
-          <div className="col-start-2 col-span-6 flex justify-between">
+          <div className="col-start-2 col-span-6 gap-2 flex flex-col justify-between">
             <div className="flex space-x-2">
               <HourglassIcon className="w-5 h-5" />
-              <p>3-4 hours</p>
+              <p>{itinerary.time}</p>
             </div>
             <div className="flex space-x-2 justify-self-end">
               <BanknoteIcon className="w-5 h-5" />
-              <p>$25 - $35</p>
+              <p>{itinerary.budget}</p>
             </div>
           </div>
         </div>

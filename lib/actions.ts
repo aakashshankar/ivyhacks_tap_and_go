@@ -1,6 +1,7 @@
 "use server";
 import { redirect } from "next/navigation";
 import { Locations, Coordinates, Profile, WeatherForecast } from "./types";
+import { writeFile, mkdir } from "node:fs/promises";
 
 export async function fetchCoords(locations: Locations) {
   const response = await fetch("/api/cartesian", {
@@ -20,15 +21,12 @@ export async function fetchCoords(locations: Locations) {
 }
 
 export async function generatePlan(formData: FormData) {
-  console.log("Entering generatePlan function");
   const destination = formData.get("destination") as string;
   const style = formData.get("style") as string;
   const budget = formData.get("budget") as string;
   const companion = formData.get("companion") as string;
   const startDate = formData.get("startDate") as string;
   const endDate = formData.get("endDate") as string;
-
-  console.log("data", Object.fromEntries(formData.entries()));
 
   const coordinatesResponse = await fetch(
     process.env.NEXT_PUBLIC_SERVER_URL + "/api/cartesian",
@@ -38,7 +36,7 @@ export async function generatePlan(formData: FormData) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ locations: { destination: [destination] } }),
-    }
+    },
   );
 
   if (!coordinatesResponse.ok) {
@@ -67,7 +65,7 @@ export async function generatePlan(formData: FormData) {
       headers: {
         "Content-Type": "application/json",
       },
-    }
+    },
   );
   const weatherData = await weather.json();
   const forecast: WeatherForecast = weatherData.weatherForecast;
@@ -90,7 +88,7 @@ export async function generatePlan(formData: FormData) {
         endDate,
         forecast,
       }),
-    }
+    },
   );
 
   if (!response.ok) {
@@ -99,6 +97,19 @@ export async function generatePlan(formData: FormData) {
 
   const data = await response.json();
 
+  const dbData = {
+    destination,
+    style,
+    budget,
+    companion,
+    startDate,
+    endDate,
+    itin: data.locations,
+    weather: forecast,
+    coordinates: destCoords,
+  };
+  writeDbData(dbData);
+
   // return { locations: data.locations, itinerary: data.itinerary };
   return redirect("/itinerary");
 }
@@ -106,7 +117,7 @@ export async function generatePlan(formData: FormData) {
 export async function getRoute(
   startCoordinates: Coordinates,
   endCoordinates: Coordinates,
-  profile: Profile
+  profile: Profile,
 ) {
   const response = await fetch("/api/route", {
     method: "POST",
@@ -132,7 +143,7 @@ export async function replaceItinerarySuggestion(
   budget: string,
   companion: string,
   startDate: string,
-  endDate: string
+  endDate: string,
 ) {
   const response = await fetch("/api/replace", {
     method: "POST",
@@ -163,10 +174,10 @@ export async function getWeatherForecast(
   latitude: number,
   longitude: number,
   startDate: string,
-  endDate: string
+  endDate: string,
 ) {
   const response = await fetch(
-    `/api/weather?latitude=${latitude}&longitude=${longitude}&startDate=${startDate}&endDate=${endDate}`
+    `/api/weather?latitude=${latitude}&longitude=${longitude}&startDate=${startDate}&endDate=${endDate}`,
   );
 
   if (!response.ok) {
@@ -175,4 +186,13 @@ export async function getWeatherForecast(
 
   const data = await response.json();
   return data.weatherForecast;
+}
+
+async function writeDbData(data: any) {
+  try {
+    await mkdir("data", { recursive: true });
+    await writeFile("data/db.json", JSON.stringify(data, null, 2));
+  } catch (error) {
+    console.error("Error writing to db.json:", error);
+  }
 }
