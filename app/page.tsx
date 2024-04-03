@@ -1,8 +1,9 @@
 "use client";
+
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { z } from "zod";
 import { type DateRange } from "react-day-picker";
 import { add, format } from "date-fns";
@@ -63,11 +64,9 @@ import { useAtom } from "jotai";
 import { useEffect } from "react";
 
 interface FormData {
-  destination: string;
+  destination: object;
   style: string;
   date: DateRange;
-  startDate: string;
-  endDate: string;
   budget: string;
   companion: string[];
 }
@@ -84,35 +83,46 @@ const companion = [
 ];
 
 export default function Home() {
+  const formatValue = (item: any) => item.name;
+
+  const [initialDateRange, setInitialDateRange] = useState<
+    DateRange | undefined
+  >(undefined);
+  const [selectedDate, setSelectedDate] = useAtom(dateJotai);
+
   const now = new Date();
   const hours = String(now.getHours()).padStart(2, "0"); // Format hours to 2 digits
   const minutes = String(now.getMinutes()).padStart(2, "0");
   const form = useForm<FormData>({
     defaultValues: {
-      destination: "",
+      destination: {},
       style: "",
-      startDate: "",
-      endDate: "",
-      date: undefined,
+      date: initialDateRange,
       budget: "",
       companion: [],
     },
   });
 
-  const locations = [
-    { label: "New York", value: "new york" },
-    { label: "Seoul", value: "seoul" },
-    { label: "Mumbai", value: "mumbai" },
-    { label: "Barcelona", value: "barcelona" },
-    { label: "Paris", value: "paris" },
-    { label: "Rome", value: "rome" },
-    { label: "Istanbul", value: "istanbul" },
-    { label: "Sydney", value: "sydney" },
-    { label: "Tokyo", value: "tokyo" },
-    { label: "Hong Kong", value: "hong kong" },
-  ] as const;
+  // const locations = [
+  //   { label: "New York", value: "new york" },
+  //   { label: "Seoul", value: "seoul" },
+  //   { label: "Mumbai", value: "mumbai" },
+  //   { label: "Barcelona", value: "barcelona" },
+  //   { label: "Paris", value: "paris" },
+  //   { label: "Rome", value: "rome" },
+  //   { label: "Istanbul", value: "istanbul" },
+  //   { label: "Sydney", value: "sydney" },
+  //   { label: "Tokyo", value: "tokyo" },
+  //   { label: "Hong Kong", value: "hong kong" },
+  // ] as const;
+
+  const handlePick = useCallback((value: any, item: any) => {
+    console.log(item);
+    form.setValue("destination", item);
+  }, []);
 
   const onSubmit = (data: any) => {
+    form.setValue("date", selectedDate);
     console.log(form.getValues());
     // generatePlan(...);
   };
@@ -122,12 +132,11 @@ export default function Home() {
     day: "2-digit",
   });
 
-  const [selectedDate, setSelectedDate] = useAtom<DateRange | undefined>(
-    dateJotai
-  );
-
+  // Form display the initial date ranged based on the value of selectedDate atom
   useEffect(() => {
-    console.log(selectedDate);
+    if (selectedDate) {
+      setInitialDateRange(selectedDate);
+    }
   }, [selectedDate]);
 
   return (
@@ -161,12 +170,7 @@ export default function Home() {
         <div className="text-2xl text-left pt-24 pb-8 font-bold text-black]">
           Plan Your Dream Journey Instantly!
         </div>
-        <PlaceKit
-          apiKey="pk_z8KeA+fPiXBq7qg0DYVNW2jLPGafgEdQY26OjFF3pUA="
-          options={{
-            types: ["city"],
-          }}
-        />
+
         <Form {...form}>
           <form
             action={generatePlan}
@@ -180,17 +184,23 @@ export default function Home() {
                 <FormItem>
                   <FormLabel className="text-black/80">Where to?</FormLabel>
                   <FormControl>
-                    {/* <Input placeholder="New York, NY" {...field} /> */}
-                    <div className="w-full relative">
-                      <div className="absolute left-4 top-1/2 transform -translate-y-1/2">
-                        <SearchIcon className="w-5 h-5 text-[#2E2E29]" />
-                      </div>
-                      <Input
-                        placeholder="Search a city"
-                        className="pl-12"
-                        {...field}
-                      />
-                    </div>
+                    <PlaceKit
+                      apiKey={process.env.NEXT_PUBLIC_PLACE_KIT_API_KEY}
+                      options={{
+                        types: ["city"],
+                        countrySelect: false,
+                        formatValue,
+                        panel: {
+                          className: "",
+                          offset: 14,
+                          strategy: "absolute",
+                          flip: false,
+                        },
+                      }}
+                      placeholder="Search a city"
+                      className="!flex !h-11 !w-full !rounded-2xl !border !border-input !bg-background !px-1 !py-2 !text-sm !ring-offset-background !file:border-0 !file:bg-transparent !file:text-sm !file:font-medium !placeholder:text-[#2E2E29] !focus-visible:outline-none !focus-visible:ring-2 !focus-visible:ring-ring !focus-visible:ring-offset-2 !disabled:cursor-not-allowed !disabled:opacity-50"
+                      onPick={handlePick}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -320,7 +330,7 @@ export default function Home() {
                                 }}
                               />
                             </FormControl>
-                            <FormLabel className="font-normal">
+                            <FormLabel className="font-normal hover:cursor-pointer">
                               {item.label}
                             </FormLabel>
                           </FormItem>
