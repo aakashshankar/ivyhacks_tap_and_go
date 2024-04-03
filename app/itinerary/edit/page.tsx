@@ -49,6 +49,7 @@ import { useAtom } from "jotai";
 import { DateRange } from "react-day-picker";
 import { useEffect } from "react";
 import { Separator } from "@/components/ui/separator";
+import TravelForm from "@/components/common/travel-form";
 
 interface FormData {
   location: string;
@@ -70,209 +71,21 @@ const companion = [
 ];
 
 export default function Page() {
-  const [selectedDate, setSelectedDate] = useAtom<DateRange | undefined>(
-    dateJotai
-  );
-
-  useEffect(() => {
-    console.log(selectedDate);
-  }, [selectedDate]);
-
-  const now = new Date();
-  const hours = String(now.getHours()).padStart(2, "0"); // Format hours to 2 digits
-  const minutes = String(now.getMinutes()).padStart(2, "0");
-  const form = useForm<FormData>({
-    defaultValues: {
-      location: "",
-      style: "",
-      date: "",
-      budget: "",
-      companion: [],
-    },
-  });
-
-  const onSubmit = (data: any) => {
-    console.log(data);
-    // generatePlan(...);
-  };
-
   return (
     <main className="relative flex flex-col items-center rounded-t-2xl overflow-hidden">
-      {/* HEADER */}
       <div className="relative z-50 flex flex-col h-full w-full">
-        <div className="flex items-center justify-between h-10 my-4 px-6 sticky top-2 z-50 w-full">
-          <div className="flex items-center space-x-1">
-            <p className="text-sm">
-              {hours}:{minutes}
-            </p>
-            <NavigationIcon className="w-3 h-3" fill="black" />
-          </div>
-
-          <div className="flex items-center space-x-1">
-            <BarChart className="w-5 h-5" />
-            <WifiIcon className="w-5 h-5" />
-            <BatteryFullIcon className="w-5 h-5" />
-          </div>
-        </div>
-        <div className="pt-4 space-y-4 px-6">
+        {/* HEADER */}
+        <div className="space-y-4 p-6 mt-4">
           <Link href="/itinerary" className="w-fit flex items-center">
             <ArrowLeftIcon className={`w-5 h-5`} />
           </Link>
-          <div className="text-2xl text-left font-bold text-black] py-3">
+          <div className="text-2xl text-left font-bold text-black">
             <p>Adventure Trip</p>
             <p>to New York</p>
           </div>
         </div>
         <Separator className="bg-black/70 my-4" />
-        <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="w-full space-y-6 px-6"
-          >
-            <FormField
-              control={form.control}
-              name="location"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-black/80">Where to?</FormLabel>
-                  <FormControl>
-                    {/* <Input placeholder="New York, NY" {...field} /> */}
-                    <div className="w-full relative">
-                      <div className="absolute left-4 top-1/2 transform -translate-y-1/2">
-                        <SearchIcon className="w-5 h-5 text-[#2E2E29]" />
-                      </div>
-                      <Input placeholder="Search a city" className="pl-12" />
-                    </div>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="style"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Choose your travel style</FormLabel>
-                  <FormControl>
-                    <Select>
-                      <SelectTrigger className="w-full relative">
-                        <div className="absolute left-4 top-1/2 transform -translate-y-1/2 z-10">
-                          <LuggageIcon className="text-[#2E2E29] w-5 h-5" />
-                        </div>
-                        <div className="flex items-center pl-10 pr-4 py-2">
-                          <SelectValue
-                            placeholder="Travel style"
-                            className="placeholder:text-left flex-1"
-                          />
-                        </div>
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectGroup>
-                          <SelectItem value="adventure">
-                            Adventure Travel
-                          </SelectItem>
-                          <SelectItem value="foodie">Foodie Travel</SelectItem>
-                          <SelectItem value="wellness">
-                            Wellness Travel
-                          </SelectItem>
-                          <SelectItem value="accommodation">
-                            Accommodation Focused
-                          </SelectItem>
-                          <SelectItem value="culture">
-                            Cultural Exploration
-                          </SelectItem>
-                          <SelectItem value="slow">Slow Travel</SelectItem>
-                        </SelectGroup>
-                      </SelectContent>
-                    </Select>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="date"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Date</FormLabel>
-                  <FormControl>
-                    <DatePickerWithRange className="[&>button]:w-full" />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="budget"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Budget</FormLabel>
-                  <FormControl>
-                    <div className="w-full relative">
-                      <div className="absolute left-4 top-1/2 transform -translate-y-1/2">
-                        <BanknoteIcon className="w-5 h-5 text-[#2E2E29]" />
-                      </div>
-                      <Input placeholder="500" className="pl-12" />
-                    </div>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="companion"
-              render={() => (
-                <FormItem>
-                  <FormLabel>Companion</FormLabel>
-                  {companion.map((item) => (
-                    <FormField
-                      key={item.id}
-                      control={form.control}
-                      name="companion"
-                      render={({ field }) => {
-                        return (
-                          <FormItem
-                            key={item.id}
-                            className="flex flex-row items-start space-x-3 space-y-0 py-1"
-                          >
-                            <FormControl>
-                              <Checkbox
-                                checked={field.value?.includes(item.id)}
-                                onCheckedChange={(checked) => {
-                                  return checked
-                                    ? field.onChange([...field.value, item.id])
-                                    : field.onChange(
-                                        field.value?.filter(
-                                          (value) => value !== item.id
-                                        )
-                                      );
-                                }}
-                              />
-                            </FormControl>
-                            <FormLabel className="font-normal">
-                              {item.label}
-                            </FormLabel>
-                          </FormItem>
-                        );
-                      }}
-                    />
-                  ))}
-                </FormItem>
-              )}
-            />
-            <div className="flex-1 w-full">
-              <Link href="/itinerary" passHref>
-                <Button className="bg-[#99BAEC] text-black w-full h-14 text-lg hover:bg-[#99BAEC]/90">
-                  Save Change
-                </Button>
-              </Link>
-            </div>
-          </form>
-        </Form>
+        <TravelForm buttonText="Save Plan" />
       </div>
     </main>
   );
