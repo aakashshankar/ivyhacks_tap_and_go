@@ -36,8 +36,8 @@ export default function MapComponent({ locations, coordinates, routes }: MapProp
       {...viewState}
       onMove={(evt) => setViewState(evt.viewState)}
       style={{ width: '100%', height: '400px' }}
-      mapStyle="mapbox://styles/mapbox/streets-v11"
-      mapboxAccessToken="pk.eyJ1IjoicnBtb24iLCJhIjoiY2x1NDk3ZTBiMTg5OTJxbzZoZ2UycnkwbyJ9.hEboNmvtkFEWh5OAIT2OOw"
+      mapStyle="mapbox://styles/jk2933/clu5m9xg500hp01pabwfocrjz"
+      mapboxAccessToken="pk.eyJ1IjoiamsyOTMzIiwiYSI6ImNsdTVtNXBsbDBsMnUybG44OXo0MGx4bWsifQ.NuqAVKMztokOZg2PsZXWEA"
     >
       <MapMarker locations={locations} coordinates={coordinates} />
       {/* Render routes */}

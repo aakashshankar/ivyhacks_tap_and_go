@@ -11,7 +11,7 @@ const Header = ({ isScroll }: HeaderProps) => {
       <Link href="/" className="w-fit flex items-center">
         <ArrowLeftIcon className={`w-5 h-5 ${!isScroll && "mb-2"}`} />
         {isScroll && (
-          <p className="text-lg w-full pl-3">Adventure Trip to New York</p>
+          <p className="text-lg w-full pl-3">Adventure Trip to Paris</p>
         )}
       </Link>
       {!isScroll && (
@@ -20,7 +20,7 @@ const Header = ({ isScroll }: HeaderProps) => {
             <div className="flex items-center justify-between">
               <div className="flex flex-col text-xl">
                 <p>Adventure Trip</p>
-                <p>to New York</p>
+                <p>to Paris</p>
               </div>
               <Link href="/itinerary/edit">
                 <div className="rounded-full bg-white p-2 shadow-md">
@@ -32,7 +32,7 @@ const Header = ({ isScroll }: HeaderProps) => {
           <section className="flex items-center justify-between">
             <div className="flex space-x-2">
               <CalendarDaysIcon className="w-5 h-5" />
-              <p>Mon, Mar 25 - Tue, Apr 2</p>
+              <p>Apr 1, 2024 - Apr 4, 2024</p>
             </div>
             <p>$ 500</p>
           </section>

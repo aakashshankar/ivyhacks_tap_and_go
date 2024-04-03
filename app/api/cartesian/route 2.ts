@@ -1,18 +1,16 @@
 // app/api/getLocationCoordinates.ts
 import mbxGeocoding from "@mapbox/mapbox-sdk/services/geocoding";
 import { NextRequest } from "next/server";
-import { Itinerary } from "../plan/route";
 
 const geocodingClient = mbxGeocoding({
   accessToken: process.env.MAPBOX_ACCESS_TOKEN!,
 });
 
-type Locations = Record<string, Itinerary[]>;
+type Locations = Record<string, string[]>;
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
   const { locations }: { locations: Locations } = body;
-  console.log("locations", locations);
 
   try {
     const coordinates: { [key: string]: number[][] } = {};
@@ -26,7 +24,7 @@ export async function POST(req: NextRequest) {
             .send();
           const feature = response.body.features[0];
           return feature.geometry.coordinates;
-        }),
+        })
       );
       coordinates[dayIndex] = dayCoordinates;
       dayIndex++;

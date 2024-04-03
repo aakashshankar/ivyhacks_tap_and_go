@@ -2,14 +2,6 @@
 import Client from "@anthropic-ai/sdk";
 import { NextRequest } from "next/server";
 
-export type Itinerary = {
-  location: string;
-  time: string;
-  budget: string;
-  activity?: string;
-  name?: string;
-};
-
 const client = new Client({ apiKey: process.env.CLAUDE_API_KEY! });
 
 export async function POST(req: NextRequest) {
@@ -47,7 +39,6 @@ Please format the itinerary as follows:
   // ...Continue for each day of the trip
 }
 In your generated text, only include the JSON object with the suggested activities. Do not include any additional text or formatting.
-If there are any undefined or missing data. Please assume something and make sure you always give an output. Do not give anything besides valid output as we defined above.
 
 Let's generate an amazing personalized itinerary that will make the user's trip unforgettable!`;
 
