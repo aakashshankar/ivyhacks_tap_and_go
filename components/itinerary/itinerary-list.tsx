@@ -26,7 +26,7 @@ const ItineraryList = () => {
         </div>
 
         <div className="col-span-1 flex justify-center">
-          {isOpen ? (
+          {!isOpen ? (
             <ChevronDownIcon
               className="hover:cursor-pointer w-5 h-5"
               onClick={() => setIsOpen(!isOpen)}
