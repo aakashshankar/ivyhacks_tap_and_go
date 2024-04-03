@@ -3,6 +3,7 @@ import { Separator } from "../ui/separator";
 import { ClockIcon } from "lucide-react";
 import { HourglassIcon } from "lucide-react";
 import { BanknoteIcon } from "lucide-react";
+import toast, { Toaster } from "react-hot-toast";
 
 interface FooterProps {
   isScroll: boolean;
@@ -44,10 +45,13 @@ const Footer = ({ isScroll }: FooterProps) => {
 
       <Separator className="bg-black" />
       <div className="p-4 flex space-x-2 justify-center">
-        <div className="p-3 flex-1 border border-black rounded-full text-center hover:cursor-pointer">
+        <div className="p-3 flex-1 border border-black rounded-full text-center hover:cursor-pointer hover:bg-[#F2ECA4] hover:border-[#F2ECA4]">
           Regenerate
         </div>
-        <div className="p-3 flex-1 rounded-full text-center bg-[#99BAEC] hover:cursor-pointer">
+        <div
+          onClick={() => toast.success("Successfully saved!")}
+          className="p-3 flex-1 rounded-full text-center bg-[#99BAEC] hover:cursor-pointer hover:bg-[#99BAEC]/90"
+        >
           Save Plan
         </div>
       </div>

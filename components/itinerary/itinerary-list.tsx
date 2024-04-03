@@ -6,6 +6,7 @@ import { HourglassIcon } from "lucide-react";
 import { BanknoteIcon } from "lucide-react";
 import { MapPinIcon } from "lucide-react";
 import { Itinerary } from "@/app/api/plan/route";
+import { Badge } from "@/components/ui/badge";
 
 type HeaderProps = {
   itinerary: Itinerary;
@@ -14,7 +15,7 @@ type HeaderProps = {
 const ItineraryList = ({ itinerary, label }: HeaderProps) => {
   const [isOpen, setIsOpen] = React.useState(false);
   return (
-    <div className="p-3 bg-white">
+    <div className="px-3 py-6 bg-white">
       {/* Title */}
       <div className="grid grid-cols-8 gap-2">
         <div className="p-1 bg-[#99BAEC] rounded-full text-center font-bold">
@@ -24,20 +25,34 @@ const ItineraryList = ({ itinerary, label }: HeaderProps) => {
           {itinerary.location}
         </div>
 
-        {isOpen ? (
-          <ChevronDownIcon
-            className="hover:cursor-pointer"
-            onClick={() => setIsOpen(!isOpen)}
-          />
-        ) : (
-          <ChevronUpIcon
-            className="hover:cursor-pointer"
-            onClick={() => setIsOpen(!isOpen)}
-          />
-        )}
+        <div className="col-span-1 flex justify-center">
+          {isOpen ? (
+            <ChevronDownIcon
+              className="hover:cursor-pointer w-5 h-5"
+              onClick={() => setIsOpen(!isOpen)}
+            />
+          ) : (
+            <ChevronUpIcon
+              className="hover:cursor-pointer w-5 h-5"
+              onClick={() => setIsOpen(!isOpen)}
+            />
+          )}
+        </div>
       </div>
+
+      <div className="grid grid-cols-8 gap-2">
+        <div className="col-start-2 col-span-full flex items-center py-1 mb-1">
+          <Badge
+            variant="outline"
+            className="text-[#2E2E29] border-[#2E2E29] text-xs font-light"
+          >
+            Restaurant
+          </Badge>
+        </div>
+      </div>
+
       {/* Content */}
-      <div className="space-y-2 ml-2 text-sm">
+      <div className="space-y-2 ml-2 text-sm mt-2">
         {isOpen && (
           <div className="grid grid-cols-8 gap-2 text-gray-700">
             <div className="col-start-2 col-span-full flex items-center py-1">
