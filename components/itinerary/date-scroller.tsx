@@ -10,7 +10,7 @@ const DateScroller = () => {
   let days = ["Mon", "Tue", "Wed", "Thu"];
   let dates = ["01", "02", "03", "04"];
   return (
-    <Carousel className="w-full max-w-sm text-center py-2">
+    <Carousel className="w-full max-w-sm text-center py-4">
       <CarouselContent className="-ml-2">
         {Array.from({ length: 4 }).map((_, index) => (
           <CarouselItem key={index} className="pl-6 flex flex-col basis-1/6">

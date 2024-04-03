@@ -21,7 +21,7 @@ export default function Page() {
   const handleScroll = (event: React.UIEvent<HTMLDivElement>) => {
     const viewport = event.currentTarget;
 
-    if (viewport.scrollTop > 5) {
+    if (viewport.scrollTop > 20) {
       setIsScroll(true);
     } else {
       setIsScroll(false);

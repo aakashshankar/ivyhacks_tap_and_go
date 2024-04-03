@@ -352,7 +352,7 @@ const TravelForm = ({ buttonText }: TravelFormProps) => {
           {/* <Link href="/itinerary" passHref> */}
           <Button
             type="submit"
-            className="bg-[#99BAEC] text-black w-full p-3 text-lg hover:bg-[#99BAEC]/90"
+            className="bg-[#99BAEC] text-black w-full py-3 text-lg hover:bg-[#99BAEC]/90"
           >
             {buttonText}
           </Button>
