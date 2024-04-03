@@ -65,7 +65,7 @@ export default function Component({ data }: { data: any }) {
             />
             <Separator className="bg-black/70" />
           </div>
-          <Map />
+          <Map itin={activeItinerary} />
           <div>
             {activeItinerary.map((itin, index) => (
               <div key={index}>

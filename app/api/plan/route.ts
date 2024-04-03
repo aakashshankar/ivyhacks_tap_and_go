@@ -3,14 +3,6 @@
 import Client from "@anthropic-ai/sdk";
 import { NextRequest } from "next/server";
 
-export type Itinerary = {
-  location: string;
-  time: string;
-  budget: string;
-  activity?: string;
-  name?: string;
-};
-
 const client = new Client({ apiKey: process.env.CLAUDE_API_KEY! });
 
 export async function POST(req: NextRequest) {

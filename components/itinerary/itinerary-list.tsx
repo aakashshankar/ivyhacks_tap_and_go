@@ -5,7 +5,7 @@ import { ClockIcon } from "lucide-react";
 import { HourglassIcon } from "lucide-react";
 import { BanknoteIcon } from "lucide-react";
 import { MapPinIcon } from "lucide-react";
-import { Itinerary } from "@/app/api/plan/route";
+import { Itinerary } from "@/lib/types";
 import { Badge } from "@/components/ui/badge";
 
 type HeaderProps = {
