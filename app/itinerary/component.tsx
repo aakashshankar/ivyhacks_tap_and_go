@@ -29,7 +29,7 @@ export default function Component({ data }: { data: any }) {
     const startDate = new Date(data.startDate);
     const dayNumber =
       Math.floor(
-        (activeDate.getTime() - startDate.getTime()) / (1000 * 3600 * 24),
+        (activeDate.getTime() - startDate.getTime()) / (1000 * 3600 * 24)
       ) + 1;
     const key = `day_${dayNumber}`;
     return data.itin[key];
@@ -37,7 +37,7 @@ export default function Component({ data }: { data: any }) {
 
   const [activeDate, setActiveDate] = useState(new Date(data.startDate));
   const [activeItinerary, setActiveItinerary] = useState(
-    getDayFromItin(activeDate),
+    getDayFromItin(activeDate)
   );
 
   const handleDateClick = (date: Date) => {
@@ -46,13 +46,13 @@ export default function Component({ data }: { data: any }) {
   };
 
   return (
-    <ScrollArea.Root className="h-[844px]">
+    <ScrollArea.Root className="h-[940px]">
       <ScrollArea.Viewport className="h-full w-full" onScroll={handleScroll}>
-        <MobileHeader isScroll={isScroll} backgroundColor="bg-[#F2ECA4]" />
+        {/* <MobileHeader isScroll={isScroll} backgroundColor="bg-[#F2ECA4]" /> */}
         <div className="">
           {/* SECOND HEADER SECTION */}
-          <div className="sticky left-0 top-10 z-50 space-y-5 bg-[#F2ECA4]">
-            <div className={`space-y-3 px-6`}>
+          <div className="bg-[#F2ECA4] sticky left-0 top-0 z-50">
+            <div className={`${!isScroll ? "p-6" : "p-4"}`}>
               {/* ANIMATION */}
               <Header isScroll={isScroll} data={data} />
             </div>
