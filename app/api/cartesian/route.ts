@@ -11,26 +11,14 @@ type Locations = Record<string, string[]>;
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
-  const { locations }: { locations: Locations } = body;
-  console.log("locations", locations);
+  const { location, countrycode } = body;
 
   try {
-    const coordinates: { [key: string]: number[][] } = {};
-
-    let dayIndex = 0;
-    for (const [day, dayLocations] of Object.entries(locations)) {
-      const dayCoordinates = await Promise.all(
-        dayLocations.map(async (location: string) => {
-          const response = await geocodingClient
-            .forwardGeocode({ query: location, limit: 1 })
-            .send();
-          const feature = response.body.features[0];
-          return feature.geometry.coordinates;
-        }),
-      );
-      coordinates[dayIndex] = dayCoordinates;
-      dayIndex++;
-    }
+    const response = await geocodingClient
+      .forwardGeocode({ query: location, limit: 1, countries: [countrycode] })
+      .send();
+    const feature = response.body.features[0];
+    const coordinates = feature.geometry.coordinates;
 
     return Response.json({ coordinates });
   } catch (error) {

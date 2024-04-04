@@ -8,7 +8,13 @@ import type {
   ClaudeAPIResponse,
   DbData,
 } from "./types";
-import { writeFile, mkdir } from "node:fs/promises";
+import { FormData } from "@/components/common/travel-form";
+import { auth, currentUser } from "@clerk/nextjs";
+import db from "./db";
+import { itineraries, locations, trips } from "@/models/schema";
+import { getDateFromStart, range } from "./utils";
+import { fetchWeatherApi } from "openmeteo";
+import { weatherCodes } from "./weathercodes";
 
 export async function fetchCoords(locations: Locations) {
   const response = await fetch("/api/cartesian", {
@@ -28,50 +34,41 @@ export async function fetchCoords(locations: Locations) {
 }
 
 export async function generatePlan(formData: FormData) {
-  const destination = formData.get("destination") as string;
-  const style = formData.get("style") as string;
-  const budget = formData.get("budget") as string;
-  const companion = formData.get("companion") as string;
-  const startDate = formData.get("startDate") as string;
-  const endDate = formData.get("endDate") as string;
+  const user = auth().protect();
+  const { destination, style, budget, companion, date, start, end } = formData;
 
-  const coordinatesResponse = await fetch(
-    process.env.NEXT_PUBLIC_SERVER_URL + "/api/cartesian",
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ locations: { destination: [destination] } }),
-    },
-  );
+  // const coordinatesResponse = await fetch(
+  //   process.env.NEXT_PUBLIC_SERVER_URL + "/api/cartesian",
+  //   {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //     body: JSON.stringify({ locations: { destination: [destination] } }),
+  //   },
+  // );
 
-  if (!coordinatesResponse.ok) {
-    throw new Error("Failed to get destination coordinates");
-  }
+  // if (!coordinatesResponse.ok) {
+  //   throw new Error("Failed to get destination coordinates");
+  // }
 
-  const coordinatesData = await coordinatesResponse.json();
-  const destCoords = coordinatesData.coordinates[0][0];
+  // const coordinatesData = await coordinatesResponse.json();
+  // const destCoords = coordinatesData.coordinates[0][0];
 
   // Format date into YYYY-MM-DD
-  const [month, day, year] = startDate.split("/");
-  let d1 = `${year}-${month}-${day}`;
-  const [month2, day2, year2] = endDate.split("/");
-  let d2 = `${year2}-${month2}-${day2}`;
-
-  const weather = await fetch(
-    process.env.NEXT_PUBLIC_SERVER_URL +
-      `/api/weather?latitude=${destCoords[1]}&longitude=${destCoords[0]}&startDate=${d1}&endDate=${d2}`,
-    {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    },
-  );
-  const weatherData = await weather.json();
-  const forecast: WeatherForecast = weatherData.weatherForecast;
-
+  const d1 = date.from?.toISOString().split("T")[0];
+  const d2 = date.to?.toISOString().split("T")[0];
+  let weather = [] as WeatherForecast[] | undefined;
+  if (d1 && d2) {
+    weather = await getWeatherForecast(
+      destination.lat,
+      destination.lng,
+      d1,
+      d2
+    );
+  }
+  
+  console.log("weather", weather);
   const response = await fetch(
     process.env.NEXT_PUBLIC_SERVER_URL + "/api/plan",
     {
@@ -84,11 +81,13 @@ export async function generatePlan(formData: FormData) {
         style,
         budget,
         companion,
-        startDate,
-        endDate,
-        forecast,
+        startDate: date.from?.toDateString(),
+        endDate: date.to?.toDateString(),
+        forecast: weather,
+        startTime: start,
+        endTime: end,
       }),
-    },
+    }
   );
 
   if (!response.ok) {
@@ -111,9 +110,10 @@ export async function generatePlan(formData: FormData) {
                 "Content-Type": "application/json",
               },
               body: JSON.stringify({
-                locations: { destination: [location.location] },
+                location: location.location,
+                countrycode: destination.countrycode,
               }),
-            },
+            }
           );
           if (!coordinatesResponse.ok) {
             throw new Error("Failed to get destination coordinates");
@@ -124,32 +124,52 @@ export async function generatePlan(formData: FormData) {
             ...location,
             coordinates,
           };
-        }),
+        })
       );
       updatedLocations[day] = updatedLocationsForDay;
-    }),
+    })
   );
 
-  const dbData: DbData = {
-    destination,
-    style,
-    budget,
-    companion,
-    startDate,
-    endDate,
-    itin: updatedLocations,
-    weather: forecast,
-  };
-  writeDbData(dbData);
+  const trip = await db
+    .insert(trips)
+    .values({
+      userId: user.userId,
+      city: destination.name,
+      coordinates: destination.coordinates,
+      countrycode: destination.countrycode,
+      companions: companion.join(","),
+      overallBudget: budget,
+      travelStyle: style,
+      startDate: date.from?.toDateString(),
+      endDate: date.to?.toDateString(),
+    })
+    .returning();
 
-  // return { locations: data.locations, itinerary: data.itinerary };
+  for (const [day, lcns] of Object.entries(updatedLocations)) {
+    const itin = await db
+      .insert(itineraries)
+      .values({
+        tripId: trip[0].id,
+        date: getDateFromStart(date.from!, day).toDateString(),
+        // dailyBudget,
+        // note,
+      })
+      .returning();
+    for (const lcn of lcns) {
+      await db.insert(locations).values({
+        itineraryId: itin[0].id,
+        locationName: lcn.location,
+        activity: lcn.activity,
+      });
+    }
+  }
   return redirect("/itinerary");
 }
 
 export async function getRoute(
   startCoordinates: Coordinates,
   endCoordinates: Coordinates,
-  profile: Profile,
+  profile: Profile
 ) {
   const response = await fetch("/api/route", {
     method: "POST",
@@ -175,7 +195,7 @@ export async function replaceItinerarySuggestion(
   budget: string,
   companion: string,
   startDate: string,
-  endDate: string,
+  endDate: string
 ) {
   const response = await fetch("/api/replace", {
     method: "POST",
@@ -206,25 +226,54 @@ export async function getWeatherForecast(
   latitude: number,
   longitude: number,
   startDate: string,
-  endDate: string,
+  endDate: string
 ) {
-  const response = await fetch(
-    `/api/weather?latitude=${latitude}&longitude=${longitude}&startDate=${startDate}&endDate=${endDate}`,
-  );
+  const params = {
+    latitude,
+    longitude,
+    daily: ["weathercode", "rain_sum", "showers_sum", "snowfall_sum"],
+    timezone: "GMT",
+    start_date: startDate,
+    end_date: endDate,
+  };
+  const url = "https://api.open-meteo.com/v1/forecast";
 
-  if (!response.ok) {
-    throw new Error("Failed to fetch weather forecast");
-  }
-
-  const data = await response.json();
-  return data.weatherForecast;
-}
-
-async function writeDbData(data: any) {
   try {
-    await mkdir("data", { recursive: true });
-    await writeFile("data/db.json", JSON.stringify(data, null, 2));
+    const responses = await fetchWeatherApi(url, params);
+    const response = responses[0];
+
+    // Attributes for timezone and location
+    const utcOffsetSeconds = response.utcOffsetSeconds();
+    const daily = response.daily()!;
+    const weatherData = {
+      daily: {
+        time: range(
+          Number(daily.time()),
+          Number(daily.timeEnd()),
+          daily.interval()
+        ).map((t) => new Date((t + utcOffsetSeconds) * 1000)),
+        weatherCode: daily.variables(0)!.valuesArray()!,
+        rainSum: daily.variables(1)!.valuesArray()!,
+        showersSum: daily.variables(2)!.valuesArray()!,
+        snowfallSum: daily.variables(3)!.valuesArray()!,
+      },
+    };
+
+    const weatherForecast: WeatherForecast[] = weatherData.daily.time.map(
+      (date: Date, index: number) => {
+        const weatherCode = weatherData.daily.weatherCode[index];
+        const weatherType =
+          weatherCodes[weatherCode.toString()].day.description;
+
+        return {
+          date,
+          weatherCode,
+          weatherType,
+        } as WeatherForecast;
+      }
+    );
+    return weatherForecast;
   } catch (error) {
-    console.error("Error writing to db.json:", error);
+    console.error("Error fetching weather data:", error);
   }
 }

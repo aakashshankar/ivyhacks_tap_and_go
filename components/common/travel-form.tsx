@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState, useCallback } from "react";
+import { useState, useCallback, startTransition, useTransition } from "react";
 import { z } from "zod";
 import { type DateRange } from "react-day-picker";
 import { add, format } from "date-fns";
@@ -64,8 +64,22 @@ import { dateJotai } from "@/lib/jotai";
 import { useAtom } from "jotai";
 import { useEffect } from "react";
 
-interface FormData {
-  destination: object;
+export interface FormData {
+  destination: {
+    name: string;
+    highlight: string;
+    city: string;
+    county: string;
+    administrative: string;
+    country: string;
+    countrycode: string;
+    zipcode: string[];
+    population: number;
+    lat: number;
+    lng: number;
+    coordinates: string;
+    type: string;
+  };
   style: string;
   date: DateRange;
   start: string;
@@ -119,6 +133,8 @@ interface TravelFormProps {
 const TravelForm = ({ buttonText }: TravelFormProps) => {
   const formatValue = (item: any) => item.name;
 
+  const [isPending, startTransition] = useTransition();
+
   const [initialDateRange, setInitialDateRange] = useState<
     DateRange | undefined
   >(undefined);
@@ -129,7 +145,11 @@ const TravelForm = ({ buttonText }: TravelFormProps) => {
   const minutes = String(now.getMinutes()).padStart(2, "0");
   const form = useForm<FormData>({
     defaultValues: {
-      destination: {},
+      destination: {
+        city: "",
+        coordinates: "",
+        countrycode: "",
+      },
       style: "",
       date: initialDateRange,
       start: "",
@@ -144,11 +164,15 @@ const TravelForm = ({ buttonText }: TravelFormProps) => {
   }, []);
 
   const onSubmit = (data: any, event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+    // event.preventDefault();
     if (selectedDate) {
       form.setValue("date", selectedDate);
     }
     console.log(form.getValues());
+    startTransition(async () => {
+      const plan = form.getValues();
+      await generatePlan(plan);
+    });
   };
   const dateFormatted = new Intl.DateTimeFormat("en-US", {
     year: "numeric",
@@ -179,10 +203,11 @@ const TravelForm = ({ buttonText }: TravelFormProps) => {
               <FormLabel>Where to?</FormLabel>
               <FormControl>
                 <PlaceKit
-                  apiKey={process.env.NEXT_PUBLIC_PLACE_KIT_API_KEY}
+                  apiKey={process.env.NEXT_PUBLIC_PLACE_KIT_API_KEY!}
                   options={{
                     types: ["city"],
                     countrySelect: false,
+                    //@ts-ignore
                     formatValue,
                     panel: {
                       className: "",
@@ -242,9 +267,7 @@ const TravelForm = ({ buttonText }: TravelFormProps) => {
           render={({ field }) => (
             <FormItem>
               <FormLabel>Date</FormLabel>
-              <FormControl>
-                <DatePickerWithRange className="[&>button]:w-full" />
-              </FormControl>
+              <DatePickerWithRange className="[&>button]:w-full" />
               <FormMessage />
             </FormItem>
           )}

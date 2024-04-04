@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/popover";
 import { dateJotai } from "@/lib/jotai";
 import { useAtom } from "jotai";
+import { FormControl } from "@/components/ui/form";
 
 export default function DatePickerWithRange({
   className,
@@ -40,6 +41,7 @@ export default function DatePickerWithRange({
     <div className={cn("grid gap-2", className)}>
       <Popover>
         <PopoverTrigger asChild>
+          <FormControl>
           <Button
             id="date"
             variant={"outline"}
@@ -62,6 +64,7 @@ export default function DatePickerWithRange({
               <span>Pick a date</span>
             )}
           </Button>
+          </FormControl>
         </PopoverTrigger>
         <PopoverContent className="w-auto p-0" align="start">
           <Calendar

@@ -8,7 +8,7 @@ export type Coordinates = [number, number];
 export type Profile = "driving" | "walking" | "cycling" | "driving-traffic";
 
 export interface WeatherForecast {
-  date: string;
+  date: Date;
   weatherCode: number;
   weatherType: string;
 }

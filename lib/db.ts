@@ -7,12 +7,12 @@ const { dbCredentials } = drizzleConfig;
 const { connectionString } = dbCredentials;
 
 // For migrations
-const migrationClient = postgres(connectionString, { max: 1 });
-(async () => {
-    // Run migrations
-    await migrate(drizzle(migrationClient), { migrationsFolder: "../drizzle" });
-    // Here you can add any additional setup or initialization code
-})();
+// const migrationClient = postgres(connectionString, { max: 1 });
+// (async () => {
+//     // Run migrations
+//     await migrate(drizzle(migrationClient), { migrationsFolder: "../migrations" });
+//     // Here you can add any additional setup or initialization code
+// })();
 
 const queryClient = postgres(connectionString);
 const db = drizzle(queryClient);
