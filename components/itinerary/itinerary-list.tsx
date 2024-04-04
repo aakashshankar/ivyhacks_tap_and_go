@@ -7,6 +7,8 @@ import { BanknoteIcon } from "lucide-react";
 import { MapPinIcon } from "lucide-react";
 import { Itinerary } from "@/lib/types";
 import { Badge } from "@/components/ui/badge";
+import { Separator } from "../ui/separator";
+import { Suggestion } from "./suggestion";
 
 type HeaderProps = {
   itinerary: Itinerary;
@@ -119,6 +121,19 @@ const ItineraryList = ({ itinerary, label }: HeaderProps) => {
             </div>
           </div>
         </div>
+
+        {/* Suggestion */}
+        {isOpen && (
+          <>
+            <Separator className="my-4" />
+            <div className="font-bold text-sm text-gray-700 p-2">
+              Recommended places
+            </div>
+            <div>
+              <Suggestion />
+            </div>
+          </>
+        )}
       </div>
     </>
   );
