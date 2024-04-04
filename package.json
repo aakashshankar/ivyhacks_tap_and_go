@@ -46,6 +46,7 @@
     "@types/mapbox-gl": "^3.1.0",
     "@types/mapbox__mapbox-sdk": "^0.14.0",
     "@types/pg": "^8.11.4",
+    "@types/uuid": "^9.0.8",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
     "cmdk": "^1.0.0",

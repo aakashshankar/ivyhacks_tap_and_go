@@ -77,7 +77,7 @@ export async function generatePlan(formData: FormData) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        destination,
+        destination: destination.name,
         style,
         budget,
         companion,
@@ -97,6 +97,8 @@ export async function generatePlan(formData: FormData) {
   const data: ClaudeAPIResponse = await response.json();
 
   const updatedLocations: Locations = {};
+  
+  console.log("Inserting data into DB for user", user.userId);
 
   await Promise.all(
     Object.entries(data.locations).map(async ([day, locations]) => {
@@ -163,6 +165,7 @@ export async function generatePlan(formData: FormData) {
       });
     }
   }
+  console.log("Inserted data into DB for user", user.userId);
   return redirect("/itinerary");
 }
 

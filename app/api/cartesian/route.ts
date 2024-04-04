@@ -18,6 +18,9 @@ export async function POST(req: NextRequest) {
       .forwardGeocode({ query: location, limit: 1, countries: [countrycode] })
       .send();
     const feature = response.body.features[0];
+    if (!feature) {
+      return new Response("Location not found", { status: 404 });
+    }
     const coordinates = feature.geometry.coordinates;
 
     return Response.json({ coordinates });

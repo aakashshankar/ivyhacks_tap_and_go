@@ -1,15 +1,10 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useState, useCallback, startTransition, useTransition } from "react";
-import { z } from "zod";
+import { useState, useCallback, useTransition } from "react";
 import { type DateRange } from "react-day-picker";
-import { add, format } from "date-fns";
 import { useForm } from "react-hook-form";
-import { SearchIcon, LuggageIcon } from "lucide-react";
-import { PiggyBankIcon } from "lucide-react";
+import { LuggageIcon } from "lucide-react";
 import { generatePlan } from "@/lib/actions";
 import { BanknoteIcon } from "lucide-react";
 import { ClockIcon } from "lucide-react";
@@ -19,7 +14,6 @@ import "@placekit/autocomplete-js/dist/placekit-autocomplete.css";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -28,37 +22,16 @@ import {
 import { Input } from "@/components/ui/input";
 import DatePickerWithRange from "@/components/home/date-picker-with-range";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Label } from "@/components/ui/label";
-import { BarChart } from "lucide-react";
-import { NavigationIcon } from "lucide-react";
-import { Wifi, WifiIcon } from "lucide-react";
-import { BatteryFullIcon } from "lucide-react";
 import {
   Select,
   SelectContent,
   SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
 
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command";
-import { CalendarIcon, Check, ChevronsUpDown } from "lucide-react";
-import Link from "next/link";
 import { cn } from "@/lib/utils";
-import {
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
-} from "@radix-ui/react-popover";
 
 import { dateJotai } from "@/lib/jotai";
 import { useAtom } from "jotai";
@@ -164,7 +137,7 @@ const TravelForm = ({ buttonText }: TravelFormProps) => {
   }, []);
 
   const onSubmit = (data: any, event: React.FormEvent<HTMLFormElement>) => {
-    // event.preventDefault();
+    event.preventDefault();
     if (selectedDate) {
       form.setValue("date", selectedDate);
     }
@@ -377,12 +350,31 @@ const TravelForm = ({ buttonText }: TravelFormProps) => {
             type="submit"
             className="bg-[#99BAEC] text-black w-full py-3 text-lg hover:bg-[#99BAEC]/90"
           >
-            {buttonText}
+            {isPending ? <LoadingSpinner className="w-6 h-6" /> : buttonText}
           </Button>
           {/* </Link> */}
         </div>
       </form>
     </Form>
+  );
+};
+
+export const LoadingSpinner = ({ className }: { className: string }) => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={cn("animate-spin", className, "text-white")}
+    >
+      <path d="M21 12a9 9 0 1 1-6.219-8.56" />
+    </svg>
   );
 };
 
