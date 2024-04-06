@@ -3,7 +3,7 @@ import fs from "fs/promises";
 import path from "path";
 import { notFound } from "next/navigation";
 import EditForm from "./component";
-import { Itinerary } from "../api/plan/route";
+import { Itinerary } from "../../lib/types";
 
 export type Trip = {
   id: string;
@@ -23,7 +23,7 @@ export default async function EditTripPage() {
     const jsonDirectory = path.join(process.cwd(), "data");
     const fileContents = await fs.readFile(
       path.join(jsonDirectory, `db.json`),
-      "utf8",
+      "utf8"
     );
     const tripData: Trip = JSON.parse(fileContents);
 
