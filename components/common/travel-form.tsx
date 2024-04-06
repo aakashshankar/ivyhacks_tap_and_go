@@ -32,35 +32,39 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
+import countryToCurrency, { Currencies, Countries } from "country-to-currency";
 import { cn } from "@/lib/utils";
 
 import { dateJotai } from "@/lib/jotai";
 import { useAtom } from "jotai";
 import { useEffect } from "react";
 
-export interface FormData {
-  destination: {
-    name: string;
-    highlight: string;
-    city: string;
-    county: string;
-    administrative: string;
-    country: string;
-    countrycode: string;
-    zipcode: string[];
-    population: number;
-    lat: number;
-    lng: number;
-    coordinates: string;
-    type: string;
-  };
+import currencies from "../../data/currency.json";
+
+interface FormData {
+  destination: object;
   style: string;
   date: DateRange;
   start: string;
   end: string;
   budget: string;
-  people: string;
+  travelers: string;
   companion: string[];
+}
+interface Item {
+  administrative: string;
+  city: string;
+  coordinates: string;
+  country: string;
+  countrycode: string;
+  county?: string;
+  highlight: string;
+  // lat: any;
+  // lng: any;
+  name: string;
+  population: number;
+  type: string;
+  zipcode: [];
 }
 
 const companion = [
@@ -114,6 +118,7 @@ const TravelForm = ({ buttonText }: TravelFormProps) => {
     DateRange | undefined
   >(undefined);
   const [selectedDate, setSelectedDate] = useAtom(dateJotai);
+  const [currency, setCurrency] = useState("$");
 
   const now = new Date();
   const hours = String(now.getHours()).padStart(2, "0"); // Format hours to 2 digits
@@ -130,12 +135,27 @@ const TravelForm = ({ buttonText }: TravelFormProps) => {
       start: "",
       end: "",
       budget: "",
-      people: "",
+      travelers: "",
       companion: [],
     },
   });
 
+  const isCountryCode = (key: any): key is Countries => {
+    return key in countryToCurrency;
+  };
+
   const handlePick = useCallback((value: any, item: any) => {
+    const countryCode = item.countrycode.toUpperCase();
+
+    if (isCountryCode(countryCode)) {
+      const currency = countryToCurrency[countryCode];
+      currencies.filter((c) => {
+        if (c.abbreviation === currency) {
+          setCurrency(c.symbol);
+        }
+      });
+    }
+
     form.setValue("destination", item);
   }, []);
 
@@ -297,7 +317,8 @@ const TravelForm = ({ buttonText }: TravelFormProps) => {
                 <FormControl>
                   <div className="w-full relative">
                     <div className="absolute left-4 top-1/2 transform -translate-y-1/2">
-                      <BanknoteIcon className="w-5 h-5 text-[#2E2E29]" />
+                      {/* <BanknoteIcon className="w-5 h-5 text-[#2E2E29]" /> */}
+                      {currency}
                     </div>
                     <Input placeholder="500" className="pl-12" {...field} />
                   </div>
@@ -308,16 +329,16 @@ const TravelForm = ({ buttonText }: TravelFormProps) => {
           />
           <FormField
             control={form.control}
-            name="people"
+            name="travelers"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>People</FormLabel>
+                <FormLabel>Travelers</FormLabel>
                 <FormControl>
                   <div className="w-full relative">
                     <div className="absolute left-4 top-1/2 transform -translate-y-1/2">
                       <UserRoundIcon className="w-5 h-5 text-[#2E2E29]" />
                     </div>
-                    <Input placeholder="1" className="pl-12" {...field} />
+                    <Input placeholder="2" className="pl-12" {...field} />
                   </div>
                 </FormControl>
                 <FormMessage />
