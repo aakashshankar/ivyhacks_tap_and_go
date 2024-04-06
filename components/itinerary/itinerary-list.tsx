@@ -56,7 +56,7 @@ const ItineraryList = ({ location, label }: HeaderProps) => {
             </div>
           </div>
           <div className="col-span-6 text-left font-bold ml-2 text-lg">
-            Museum of Modern Art
+            {location.locationName}
           </div>
 
           <div className="col-span-1 flex justify-center">
