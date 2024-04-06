@@ -44,26 +44,13 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command";
-import { CalendarIcon, Check, ChevronsUpDown } from "lucide-react";
-import Link from "next/link";
-import { cn } from "@/lib/utils";
-import {
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
-} from "@radix-ui/react-popover";
+import countryToCurrency, { Currencies, Countries } from "country-to-currency";
 
 import { dateJotai } from "@/lib/jotai";
 import { useAtom } from "jotai";
 import { useEffect } from "react";
+
+import currencies from "../../data/currency.json";
 
 interface FormData {
   destination: object;
@@ -72,8 +59,23 @@ interface FormData {
   start: string;
   end: string;
   budget: string;
-  people: string;
+  travelers: string;
   companion: string[];
+}
+interface Item {
+  administrative: string;
+  city: string;
+  coordinates: string;
+  country: string;
+  countrycode: string;
+  county?: string;
+  highlight: string;
+  // lat: any;
+  // lng: any;
+  name: string;
+  population: number;
+  type: string;
+  zipcode: [];
 }
 
 const companion = [
@@ -125,6 +127,7 @@ const TravelForm = ({ buttonText }: TravelFormProps) => {
     DateRange | undefined
   >(undefined);
   const [selectedDate, setSelectedDate] = useAtom(dateJotai);
+  const [currency, setCurrency] = useState("$");
 
   const now = new Date();
   const hours = String(now.getHours()).padStart(2, "0"); // Format hours to 2 digits
@@ -137,12 +140,29 @@ const TravelForm = ({ buttonText }: TravelFormProps) => {
       start: "",
       end: "",
       budget: "",
-      people: "",
+      travelers: "",
       companion: [],
     },
   });
 
+  const isCountryCode = (key: any): key is Countries => {
+    return key in countryToCurrency;
+  };
+
   const handlePick = useCallback((value: any, item: any) => {
+    const countryCode = item.countrycode.toUpperCase();
+
+    if (isCountryCode(countryCode)) {
+      const currency = countryToCurrency[countryCode];
+      console.log("CURRENCY:>> ", currency);
+      currencies.filter((c) => {
+        if (c.abbreviation === currency) {
+          setCurrency(c.symbol);
+          console.log(c.symbol);
+        }
+      });
+    }
+
     form.setValue("destination", item);
   }, []);
 
@@ -303,7 +323,11 @@ const TravelForm = ({ buttonText }: TravelFormProps) => {
                     <div className="absolute left-4 top-1/2 transform -translate-y-1/2">
                       <BanknoteIcon className="w-5 h-5 text-[#2E2E29]" />
                     </div>
-                    <Input placeholder="500" className="pl-12" {...field} />
+                    <Input
+                      placeholder={`${currency} 500`}
+                      className="pl-12"
+                      {...field}
+                    />
                   </div>
                 </FormControl>
                 <FormMessage />
@@ -312,16 +336,16 @@ const TravelForm = ({ buttonText }: TravelFormProps) => {
           />
           <FormField
             control={form.control}
-            name="people"
+            name="travelers"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>People</FormLabel>
+                <FormLabel>Travelers</FormLabel>
                 <FormControl>
                   <div className="w-full relative">
                     <div className="absolute left-4 top-1/2 transform -translate-y-1/2">
                       <UserRoundIcon className="w-5 h-5 text-[#2E2E29]" />
                     </div>
-                    <Input placeholder="1" className="pl-12" {...field} />
+                    <Input placeholder="2" className="pl-12" {...field} />
                   </div>
                 </FormControl>
                 <FormMessage />

@@ -24,13 +24,13 @@ const Header = ({ isScroll, data }: HeaderProps) => {
           <p className="text-lg w-full pl-3">Adventure Trip to Paris</p>
         )}
       </Link>
-      {isScroll && (
+      {/* {isScroll && (
         <Link href="/itinerary/edit">
           <div className="rounded-full bg-white p-2 shadow-md">
             <PencilIcon className="w-4 h-4" />
           </div>
         </Link>
-      )}
+      )} */}
       {!isScroll && (
         <div className="space-y-4">
           <section>
@@ -39,11 +39,11 @@ const Header = ({ isScroll, data }: HeaderProps) => {
                 <p>{style} Trip</p>
                 <p>to {destination}</p>
               </div>
-              <Link href="/itinerary/edit">
+              {/* <Link href="/itinerary/edit">
                 <div className="rounded-full bg-white p-2 shadow-md">
                   <PencilIcon className="w-5 h-5" />
                 </div>
-              </Link>
+              </Link> */}
             </div>
           </section>
           <section className="flex items-center justify-between">
