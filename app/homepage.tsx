@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/context-menu";
 import Link from "next/link";
 
-export default function Home() {
+export default function Home({ userId }: any) {
   return (
     <main className="relative flex flex-col items-center overflow-y-scroll rounded-t-2xl">
       {/* Background Image with Filters */}
@@ -30,7 +30,7 @@ export default function Home() {
           </ContextMenuTrigger>
           <ContextMenuContent className="z-[100]">
             <ContextMenuItem>
-              <Link href="/record">Record</Link>
+              <Link href={`/record/${userId}`}>Record</Link>
             </ContextMenuItem>
           </ContextMenuContent>
         </ContextMenu>

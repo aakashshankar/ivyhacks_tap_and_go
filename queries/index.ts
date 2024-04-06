@@ -5,7 +5,7 @@ import { itineraries, locations, trips } from "@/models/schema";
 import { eq } from "drizzle-orm";
 
 export async function getTripData(tripId: string) {
-  // const user = auth().protect();
+  const user = auth().protect();
   const itin = await db.query.trips.findFirst({
     with: {
       itineraries: {
