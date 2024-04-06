@@ -85,9 +85,7 @@ const ItineraryList = ({ location, label }: HeaderProps) => {
           {isOpen && (
             <div className="grid grid-cols-8 gap-2 text-gray-700">
               <div className="col-start-2 col-span-full flex items-center py-1 mb-2">
-                <div>
-                  {location.activity}
-                </div>
+                <div>{location.activity}</div>
               </div>
             </div>
           )}

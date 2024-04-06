@@ -4,7 +4,7 @@ import db from "@/lib/db";
 import { itineraries, locations, trips } from "@/models/schema";
 import { eq } from "drizzle-orm";
 
-export async function getUserTripData(tripId: string) {
+export async function getTripData(tripId: string) {
   const user = auth().protect();
   const itin = await db.query.trips.findFirst({
     with: {
@@ -15,6 +15,25 @@ export async function getUserTripData(tripId: string) {
       },
     },
     where: (trips, { eq }) => eq(trips.id, tripId),
+  });
+  return itin;
+}
+
+export async function getUserTripData(userId: string) {
+  // const user = auth().protect();
+  const itin = await db.query.users.findFirst({
+    with: {
+      trips: {
+        with: {
+          itineraries: {
+            with: {
+              locations: true,
+            },
+          },
+        },
+      },
+    },
+    where: (users, { eq }) => eq(users.id, userId),
   });
   return itin;
 }

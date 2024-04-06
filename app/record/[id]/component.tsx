@@ -46,7 +46,7 @@ import Link from "next/link";
 
 import { dateJotai } from "@/lib/jotai";
 import { useAtom } from "jotai";
-import { DateRange } from "react-day-picker";
+// import { DateRange } from "react-day-picker";
 import { useEffect } from "react";
 import { Separator } from "@/components/ui/separator";
 import {
@@ -55,14 +55,17 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import Image from "next/image";
+import type { TripData, UserTripData } from "@/lib/types";
 
-export default function Page() {
+export default function Component({ data }: { data: UserTripData }) {
+  console.log("data:>> ", data);
   return (
     <main className="relative flex flex-col items-center rounded-t-2xl overflow-hidden">
       <div className="relative z-50 flex flex-col h-full w-full">
         {/* HEADER */}
         <div className="space-y-4 p-6 mt-4">
-          <Link href="/itinerary" className="w-fit flex items-center">
+          <Link href="/" className="w-fit flex items-center">
             <ArrowLeftIcon className={`w-5 h-5`} />
           </Link>
           <div className="text-2xl text-left font-bold text-black">
@@ -71,26 +74,35 @@ export default function Page() {
         </div>
         <Separator className="bg-black/70 my-4" />
         <Accordion type="single" collapsible className="w-full px-6">
-          {Array.from({ length: 5 }).map((_, index) => (
-            <AccordionItem value={`item-${index + 1}`}>
-              <AccordionTrigger>2024.04.04 - 2024.05.12</AccordionTrigger>
-              <AccordionContent>
-                <div>
-                  <ul className="!list-disc flex flex-col space-y-1">
-                    <li>
-                      Now this is a story all about how, my life got
-                      flipped-turned upside down
-                    </li>
-                    <li>
-                      Now this is a story all about how, my life got
-                      flipped-turned upside down
-                    </li>
-                    <li>
-                      Now this is a story all about how, my life got
-                      flipped-turned upside down
-                    </li>
-                  </ul>
+          {data.trips.map((trip, index) => (
+            <AccordionItem key={trip.id} value={`item-${trip.id}`}>
+              <AccordionTrigger>
+                <div className="flex space-x-2">
+                  <Image
+                    src={`https://flagcdn.com/${trip.countrycode}.svg`}
+                    height="8"
+                    width="20"
+                    alt={trip.countrycode}
+                  ></Image>
+                  <p>
+                    {trip.startDate.replaceAll("-", ".")} -
+                    {trip.endDate.replaceAll("-", ".")}
+                  </p>
                 </div>
+              </AccordionTrigger>
+              <AccordionContent>
+                {trip.itineraries.map((it, index) => (
+                  <div key={it.id} className="space-y-2 mb-2">
+                    <p className="font-semibold underline underline-offset-1">
+                      {it.date?.replaceAll("-", ".")}
+                    </p>
+                    <div className="text-sm">
+                      {it.locations.map((loc, index) => (
+                        <p key={loc.id}>{loc.locationName}</p>
+                      ))}
+                    </div>
+                  </div>
+                ))}
               </AccordionContent>
             </AccordionItem>
           ))}

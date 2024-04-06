@@ -1,4 +1,4 @@
-import type { getUserTripData } from "@/queries";
+import type { getTripData, getUserTripData } from "@/queries";
 
 // lib/types.ts
 export type Locations = {
@@ -43,7 +43,10 @@ export type ClaudeAPIResponse = {
   itinerary: string;
 };
 
-export type TripData = NonNullable<Awaited<ReturnType<typeof getUserTripData>>>;
+export type TripData = NonNullable<Awaited<ReturnType<typeof getTripData>>>;
+export type UserTripData = NonNullable<
+  Awaited<ReturnType<typeof getUserTripData>>
+>;
 export type Itinerary = TripData["itineraries"][number];
 export type Location = TripData["itineraries"][number]["locations"][number];
 
