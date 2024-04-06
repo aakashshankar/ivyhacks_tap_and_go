@@ -123,16 +123,29 @@ export async function generatePlan(formData: FormData) {
               }),
             }
           );
+          
+          const unsplashResponse = await fetch(
+            process.env.NEXT_PUBLIC_SERVER_URL + `/api/unsplash?location=${location.location}`,
+            {
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }
+          );
           if (!coordinatesResponse.ok) {
             throw new Error("Failed to get destination coordinates");
           }
           const coordinatesData = await coordinatesResponse.json();
           const coordinates = coordinatesData.coordinates;
           const address = coordinatesData.address;
+          const image = await unsplashResponse.json();
+          const imageUrl = image.url;
           return {
             ...location,
             coordinates,
             address,
+            imageUrl,
           };
         })
       );
@@ -177,6 +190,7 @@ export async function generatePlan(formData: FormData) {
         address: lcn.address ?? "",
         time: lcn.time,
         locationType: lcn.locationType,
+        imageUrl: lcn.imageUrl,
       });
     }
   }

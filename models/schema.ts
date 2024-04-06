@@ -78,6 +78,7 @@ export const locations = pgTable("locations", {
   address: text("address").notNull(),
   locationType: text("location_type").notNull(),
   coordinates: text("coordinates").notNull(),
+  imageUrl: text("image_url"),
   time: text("time").notNull(),
   budget: text("budget").notNull(),
   activity: text("activity").notNull(),

@@ -18,6 +18,7 @@ export type ClaudeItinerary = {
   budget: string;
   activity: string;
   locationType: string;
+  imageUrl?: string;
   name?: string;
   coordinates: Coordinates;
   address: string;

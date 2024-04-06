@@ -24,7 +24,5 @@ export default async function Page() {
       });
     }
   }
-  const userData = await currentUser();
-
-  return <HomePage userId={userData.id} />;
+  return <HomePage userId={user.userId} />;
 }

@@ -9,6 +9,7 @@ import type { Location } from "@/lib/types";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "../ui/separator";
 import { Suggestion } from "./suggestion";
+import Image from "next/image";
 
 type HeaderProps = {
   location: Location;
@@ -39,7 +40,7 @@ const ItineraryList = ({ location, label }: HeaderProps) => {
               isOpen ? "opacity-100" : "opacity-0"
             } transition-opacity duration-150`}
           >
-            Photo
+            <Image src={location.imageUrl || ""} alt={location.locationName} width={575} height={165} className="object-cover"/>
           </div>
         </div>
       </div>
