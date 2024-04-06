@@ -154,11 +154,9 @@ const TravelForm = ({ buttonText }: TravelFormProps) => {
 
     if (isCountryCode(countryCode)) {
       const currency = countryToCurrency[countryCode];
-      console.log("CURRENCY:>> ", currency);
       currencies.filter((c) => {
         if (c.abbreviation === currency) {
           setCurrency(c.symbol);
-          console.log(c.symbol);
         }
       });
     }

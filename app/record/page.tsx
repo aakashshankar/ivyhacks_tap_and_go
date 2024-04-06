@@ -55,6 +55,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import Image from "next/image";
 
 export default function Page() {
   return (
@@ -73,23 +74,42 @@ export default function Page() {
         <Accordion type="single" collapsible className="w-full px-6">
           {Array.from({ length: 5 }).map((_, index) => (
             <AccordionItem value={`item-${index + 1}`}>
-              <AccordionTrigger>2024.04.04 - 2024.05.12</AccordionTrigger>
+              <AccordionTrigger>
+                <div className="flex space-x-2">
+                  <Image
+                    src="https://flagcdn.com/ua.svg"
+                    height="8"
+                    width="20"
+                    alt="Ukraine"
+                  ></Image>
+                  <p>2024.04.04 - 2024.05.12</p>
+                </div>
+              </AccordionTrigger>
               <AccordionContent>
-                <div>
-                  <ul className="!list-disc flex flex-col space-y-1">
-                    <li>
-                      Now this is a story all about how, my life got
-                      flipped-turned upside down
-                    </li>
-                    <li>
-                      Now this is a story all about how, my life got
-                      flipped-turned upside down
-                    </li>
-                    <li>
-                      Now this is a story all about how, my life got
-                      flipped-turned upside down
-                    </li>
-                  </ul>
+                <div className="space-y-2">
+                  <div className="flex flex-col space-y-1">
+                    <div className="font-semibold">2024.04.04</div>
+                    <ul className="text-sm list-disc">
+                      <li>The Metropolitan Museum of Art</li>
+                      <li>The Metropolitan Museum of Art</li>
+                      <li>The Metropolitan Museum of Art</li>
+                    </ul>
+                  </div>
+                  <div className="flex flex-col space-y-1">
+                    <div className="font-semibold">2024.04.04</div>
+                    <div className="text-sm">
+                      The Metropolitan Museum of Art
+                    </div>
+                    <div className="text-sm">
+                      The Metropolitan Museum of Art
+                    </div>
+                  </div>
+                  <div className="flex flex-col space-y-1">
+                    <div className="font-semibold">2024.04.04</div>
+                    <div className="text-sm">
+                      The Metropolitan Museum of Art
+                    </div>
+                  </div>
                 </div>
               </AccordionContent>
             </AccordionItem>
