@@ -1,19 +1,14 @@
 import Link from "next/link";
 import React from "react";
 import { ArrowLeftIcon, PencilIcon } from "lucide-react";
+import type {TripData} from "@/lib/types"
 import { CalendarDaysIcon } from "lucide-react";
 interface HeaderProps {
   isScroll: boolean;
-  data: {
-    style: string;
-    destination: string;
-    startDate: string;
-    endDate: string;
-    budget: number;
-  };
+  data: TripData;
 }
 const Header = ({ isScroll, data }: HeaderProps) => {
-  const { style, destination, startDate, endDate, budget } = data;
+  const { travelStyle, city, startDate, endDate, overallBudget } = data;
   return (
     <div
       className={`${isScroll && "flex justify-between items-center w-full"}`}
@@ -24,26 +19,26 @@ const Header = ({ isScroll, data }: HeaderProps) => {
           <p className="text-lg w-full pl-3">Adventure Trip to Paris</p>
         )}
       </Link>
-      {isScroll && (
+      {/* {isScroll && (
         <Link href="/itinerary/edit">
           <div className="rounded-full bg-white p-2 shadow-md">
             <PencilIcon className="w-4 h-4" />
           </div>
         </Link>
-      )}
+      )} */}
       {!isScroll && (
         <div className="space-y-4">
           <section>
             <div className="flex items-center justify-between">
               <div className="flex flex-col text-xl">
-                <p>{style} Trip</p>
-                <p>to {destination}</p>
+                <p>{travelStyle} Trip</p>
+                <p>to {city}</p>
               </div>
-              <Link href="/itinerary/edit">
+              {/* <Link href="/itinerary/edit">
                 <div className="rounded-full bg-white p-2 shadow-md">
                   <PencilIcon className="w-5 h-5" />
                 </div>
-              </Link>
+              </Link> */}
             </div>
           </section>
           <section className="flex items-center justify-between">
@@ -53,7 +48,7 @@ const Header = ({ isScroll, data }: HeaderProps) => {
                 {startDate} - {endDate}
               </p>
             </div>
-            <p>$ {budget}</p>
+            <p>$ {overallBudget}</p>
           </section>
         </div>
       )}

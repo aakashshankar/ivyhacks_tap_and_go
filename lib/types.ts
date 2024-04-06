@@ -1,14 +1,39 @@
+import type { getTripData, getUserTripData } from "@/queries";
+
 // lib/types.ts
-export interface Locations {
-  [key: string]: Itinerary[];
-}
+export type Locations = {
+  [key: string]: ClaudeItinerary[];
+};
+
+export type UpdatedLocations = {
+  [key: string]: {
+    dailyBudget?: number;
+    updatedLocationsForDay: ClaudeItinerary[];
+  };
+};
+
+export type ClaudeItinerary = {
+  location: string;
+  time: string;
+  budget: string;
+  activity: string;
+  locationType: string;
+  name?: string;
+  coordinates: Coordinates;
+  address: string;
+};
+
+export type DateRange = {
+  from: Date;
+  to: Date;
+};
 
 export type Coordinates = [number, number];
 
 export type Profile = "driving" | "walking" | "cycling" | "driving-traffic";
 
 export interface WeatherForecast {
-  date: string;
+  date: Date;
   weatherCode: number;
   weatherType: string;
 }
@@ -18,14 +43,12 @@ export type ClaudeAPIResponse = {
   itinerary: string;
 };
 
-export type Itinerary = {
-  location: string;
-  time: string;
-  budget: string;
-  activity?: string;
-  name?: string;
-  coordinates?: Coordinates;
-};
+export type TripData = NonNullable<Awaited<ReturnType<typeof getTripData>>>;
+export type UserTripData = NonNullable<
+  Awaited<ReturnType<typeof getUserTripData>>
+>;
+export type Itinerary = TripData["itineraries"][number];
+export type Location = TripData["itineraries"][number]["locations"][number];
 
 export type DbData = {
   destination: string;

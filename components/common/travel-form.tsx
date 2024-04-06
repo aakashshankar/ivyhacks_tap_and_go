@@ -1,15 +1,10 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useState, useCallback } from "react";
-import { z } from "zod";
-import { type DateRange } from "react-day-picker";
-import { add, format } from "date-fns";
+import { useState, useCallback, useTransition } from "react";
+import { type DateRange } from "@/lib/types";
 import { useForm } from "react-hook-form";
-import { SearchIcon, LuggageIcon } from "lucide-react";
-import { PiggyBankIcon } from "lucide-react";
+import { LuggageIcon } from "lucide-react";
 import { generatePlan } from "@/lib/actions";
 import { BanknoteIcon } from "lucide-react";
 import { ClockIcon } from "lucide-react";
@@ -20,7 +15,6 @@ import "@placekit/autocomplete-js/dist/placekit-autocomplete.css";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -29,41 +23,23 @@ import {
 import { Input } from "@/components/ui/input";
 import DatePickerWithRange from "@/components/home/date-picker-with-range";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Label } from "@/components/ui/label";
-import { BarChart } from "lucide-react";
-import { NavigationIcon } from "lucide-react";
-import { Wifi, WifiIcon } from "lucide-react";
-import { BatteryFullIcon } from "lucide-react";
 import {
   Select,
   SelectContent,
   SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
 
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command";
-import { CalendarIcon, Check, ChevronsUpDown } from "lucide-react";
-import Link from "next/link";
+import countryToCurrency, { Currencies, Countries } from "country-to-currency";
 import { cn } from "@/lib/utils";
-import {
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
-} from "@radix-ui/react-popover";
 
 import { dateJotai } from "@/lib/jotai";
 import { useAtom } from "jotai";
 import { useEffect } from "react";
+
+import currencies from "../../data/currency.json";
 
 interface FormData {
   destination: object;
@@ -72,8 +48,23 @@ interface FormData {
   start: string;
   end: string;
   budget: string;
-  people: string;
+  travelers: string;
   companion: string[];
+}
+interface Item {
+  administrative: string;
+  city: string;
+  coordinates: string;
+  country: string;
+  countrycode: string;
+  county?: string;
+  highlight: string;
+  // lat: any;
+  // lng: any;
+  name: string;
+  population: number;
+  type: string;
+  zipcode: [];
 }
 
 const companion = [
@@ -121,28 +112,50 @@ interface TravelFormProps {
 const TravelForm = ({ buttonText }: TravelFormProps) => {
   const formatValue = (item: any) => item.name;
 
+  const [isPending, startTransition] = useTransition();
+
   const [initialDateRange, setInitialDateRange] = useState<
     DateRange | undefined
   >(undefined);
   const [selectedDate, setSelectedDate] = useAtom(dateJotai);
+  const [currency, setCurrency] = useState("$");
 
   const now = new Date();
   const hours = String(now.getHours()).padStart(2, "0"); // Format hours to 2 digits
   const minutes = String(now.getMinutes()).padStart(2, "0");
   const form = useForm<FormData>({
     defaultValues: {
-      destination: {},
+      destination: {
+        city: "",
+        coordinates: "",
+        countrycode: "",
+      },
       style: "",
       date: initialDateRange,
       start: "",
       end: "",
       budget: "",
-      people: "",
+      travelers: "",
       companion: [],
     },
   });
 
+  const isCountryCode = (key: any): key is Countries => {
+    return key in countryToCurrency;
+  };
+
   const handlePick = useCallback((value: any, item: any) => {
+    const countryCode = item.countrycode.toUpperCase();
+
+    if (isCountryCode(countryCode)) {
+      const currency = countryToCurrency[countryCode];
+      currencies.filter((c) => {
+        if (c.abbreviation === currency) {
+          setCurrency(c.symbol);
+        }
+      });
+    }
+
     form.setValue("destination", item);
   }, []);
 
@@ -152,6 +165,10 @@ const TravelForm = ({ buttonText }: TravelFormProps) => {
       form.setValue("date", selectedDate);
     }
     console.log(form.getValues());
+    startTransition(async () => {
+      const plan = form.getValues();
+      await generatePlan(plan);
+    });
   };
   const dateFormatted = new Intl.DateTimeFormat("en-US", {
     year: "numeric",
@@ -182,10 +199,11 @@ const TravelForm = ({ buttonText }: TravelFormProps) => {
               <FormLabel>Where to?</FormLabel>
               <FormControl>
                 <PlaceKit
-                  apiKey={process.env.NEXT_PUBLIC_PLACE_KIT_API_KEY}
+                  apiKey={process.env.NEXT_PUBLIC_PLACE_KIT_API_KEY!}
                   options={{
                     types: ["city"],
                     countrySelect: false,
+                    //@ts-ignore
                     formatValue,
                     panel: {
                       className: "",
@@ -245,9 +263,7 @@ const TravelForm = ({ buttonText }: TravelFormProps) => {
           render={({ field }) => (
             <FormItem>
               <FormLabel>Date</FormLabel>
-              <FormControl>
-                <DatePickerWithRange className="[&>button]:w-full" />
-              </FormControl>
+              <DatePickerWithRange className="[&>button]:w-full" />
               <FormMessage />
             </FormItem>
           )}
@@ -301,7 +317,8 @@ const TravelForm = ({ buttonText }: TravelFormProps) => {
                 <FormControl>
                   <div className="w-full relative">
                     <div className="absolute left-4 top-1/2 transform -translate-y-1/2">
-                      <BanknoteIcon className="w-5 h-5 text-[#2E2E29]" />
+                      {/* <BanknoteIcon className="w-5 h-5 text-[#2E2E29]" /> */}
+                      {currency}
                     </div>
                     <Input placeholder="500" className="pl-12" {...field} />
                   </div>
@@ -312,16 +329,16 @@ const TravelForm = ({ buttonText }: TravelFormProps) => {
           />
           <FormField
             control={form.control}
-            name="people"
+            name="travelers"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>People</FormLabel>
+                <FormLabel>Travelers</FormLabel>
                 <FormControl>
                   <div className="w-full relative">
                     <div className="absolute left-4 top-1/2 transform -translate-y-1/2">
                       <UserRoundIcon className="w-5 h-5 text-[#2E2E29]" />
                     </div>
-                    <Input placeholder="1" className="pl-12" {...field} />
+                    <Input placeholder="2" className="pl-12" {...field} />
                   </div>
                 </FormControl>
                 <FormMessage />
@@ -378,12 +395,31 @@ const TravelForm = ({ buttonText }: TravelFormProps) => {
             type="submit"
             className="bg-[#99BAEC] text-black w-full h-12 text-lg hover:bg-[#99BAEC]/90"
           >
-            {buttonText}
+            {isPending ? <LoadingSpinner className="w-6 h-6" /> : buttonText}
           </Button>
           {/* </Link> */}
         </div>
       </form>
     </Form>
+  );
+};
+
+export const LoadingSpinner = ({ className }: { className: string }) => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={cn("animate-spin", className, "text-white")}
+    >
+      <path d="M21 12a9 9 0 1 1-6.219-8.56" />
+    </svg>
   );
 };
 

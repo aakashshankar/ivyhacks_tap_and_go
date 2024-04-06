@@ -5,16 +5,16 @@ import { ClockIcon } from "lucide-react";
 import { HourglassIcon } from "lucide-react";
 import { BanknoteIcon } from "lucide-react";
 import { MapPinIcon } from "lucide-react";
-import { Itinerary } from "@/lib/types";
+import type { Location } from "@/lib/types";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "../ui/separator";
 import { Suggestion } from "./suggestion";
 
 type HeaderProps = {
-  itinerary: Itinerary;
+  location: Location;
   label: number;
 };
-const ItineraryList = ({ itinerary, label }: HeaderProps) => {
+const ItineraryList = ({ location, label }: HeaderProps) => {
   const [isOpen, setIsOpen] = React.useState(false);
   return (
     <>
@@ -52,11 +52,11 @@ const ItineraryList = ({ itinerary, label }: HeaderProps) => {
               className="bg-[#99BAEC] rounded-full text-center font-bold p-2 flex items-center justify-center text-sm"
               style={{ width: "1.5rem", height: "1.5rem" }}
             >
-              1
+              {label}
             </div>
           </div>
           <div className="col-span-6 text-left font-bold ml-2 text-lg">
-            Museum of Modern Art
+            {location.locationName}
           </div>
 
           <div className="col-span-1 flex justify-center">
@@ -75,7 +75,7 @@ const ItineraryList = ({ itinerary, label }: HeaderProps) => {
               variant="outline"
               className="text-[#2E2E29] border-[#2E2E29] text-xs font-light"
             >
-              Restaurant
+              {location.locationType}
             </Badge>
           </div>
         </div>
@@ -85,10 +85,7 @@ const ItineraryList = ({ itinerary, label }: HeaderProps) => {
           {isOpen && (
             <div className="grid grid-cols-8 gap-2 text-gray-700">
               <div className="col-start-2 col-span-full flex items-center py-1 mb-2">
-                <div>
-                  Explore the collections of modern and contemporary art,
-                  including works by Van Gogh, Warhol, and Picasso.
-                </div>
+                <div>{location.activity}</div>
               </div>
             </div>
           )}
@@ -96,14 +93,14 @@ const ItineraryList = ({ itinerary, label }: HeaderProps) => {
           <div className="grid grid-cols-8 gap-2 font-semibold mt-2">
             <div className="col-start-2 col-span-full flex items-center space-x-2">
               <ClockIcon className="w-5 h-5" />
-              <p>09:00 am - 06:00 pm</p>
+              <p>{location.time}</p>
             </div>
           </div>
           {isOpen && (
             <div className="grid grid-cols-8 gap-2 font-semibold">
               <div className="col-start-2 col-span-full flex items-center space-x-2">
                 <MapPinIcon className="w-5 h-5" />
-                <p>11 W 53rd St, New York, NY 10019</p>
+                <p>{location.address}</p>
               </div>
             </div>
           )}
@@ -112,11 +109,11 @@ const ItineraryList = ({ itinerary, label }: HeaderProps) => {
             <div className="col-start-2 col-span-6 flex justify-between">
               <div className="flex space-x-2">
                 <HourglassIcon className="w-5 h-5" />
-                <p>3-4 hours</p>
+                <p>{location.time}</p>
               </div>
               <div className="flex space-x-2 justify-self-end">
                 <BanknoteIcon className="w-5 h-5" />
-                <p>$25 - $35</p>
+                <p>${location.budget}</p>
               </div>
             </div>
           </div>
