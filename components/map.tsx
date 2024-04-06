@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import MapGL, { MapRef } from "react-map-gl";
+import MapGL, { type MapRef } from "react-map-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import mapboxgl from "mapbox-gl";
 import MapMarker from "./mapmarker";

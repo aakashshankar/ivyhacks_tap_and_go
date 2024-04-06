@@ -7,6 +7,7 @@ import type {
   WeatherForecast,
   ClaudeAPIResponse,
   DbData,
+  UpdatedLocations,
 } from "./types";
 import type { FormData } from "@/components/common/travel-form";
 import { auth, currentUser } from "@clerk/nextjs";
@@ -96,14 +97,16 @@ export async function generatePlan(formData: FormData) {
 
   const data: ClaudeAPIResponse = await response.json();
 
-  const updatedLocations: Locations = {};
+  const updatedLocations: UpdatedLocations = {};
 
   console.log("Inserting data into DB for user", user.userId);
 
   await Promise.all(
     Object.entries(data.locations).map(async ([day, locations]) => {
+      let dailyBudget = 0;
       const updatedLocationsForDay = await Promise.all(
         locations.map(async (location) => {
+          dailyBudget += Number(location.budget) ?? 0;
           const coordinatesResponse = await fetch(
             process.env.NEXT_PUBLIC_SERVER_URL + "/api/cartesian",
             {
@@ -114,6 +117,7 @@ export async function generatePlan(formData: FormData) {
               body: JSON.stringify({
                 location: location.location,
                 countrycode: destination.countrycode,
+                proximity: [destination.lng, destination.lat],
               }),
             }
           );
@@ -121,14 +125,14 @@ export async function generatePlan(formData: FormData) {
             throw new Error("Failed to get destination coordinates");
           }
           const coordinatesData = await coordinatesResponse.json();
-          const coordinates = coordinatesData.coordinates[0][0];
+          const coordinates = coordinatesData.coordinates;
           return {
             ...location,
             coordinates,
           };
         })
       );
-      updatedLocations[day] = updatedLocationsForDay;
+      updatedLocations[day] = { dailyBudget, updatedLocationsForDay};
     })
   );
 
@@ -153,11 +157,11 @@ export async function generatePlan(formData: FormData) {
       .values({
         tripId: trip[0].id,
         date: getDateFromStart(date.from!, day).toDateString(),
-        // dailyBudget,
+        dailyBudget: lcns.dailyBudget,
         // note,
       })
       .returning();
-    for (const lcn of lcns) {
+    for (const lcn of lcns.updatedLocationsForDay) {
       await db.insert(locations).values({
         itineraryId: itin[0].id,
         budget: lcn.budget,
@@ -165,6 +169,7 @@ export async function generatePlan(formData: FormData) {
         activity: lcn.activity,
         coordinates: lcn.coordinates ? lcn.coordinates.join(",") : "",
         time: lcn.time,
+        locationType: lcn.locationType,
       });
     }
   }

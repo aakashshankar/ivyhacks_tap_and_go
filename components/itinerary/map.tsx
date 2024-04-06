@@ -10,6 +10,8 @@ const Map = ({ itin }: HeaderProps) => {
   const coordinates = itin.locations
     .map((i) => i.coordinates.split(",").map((coord) => parseFloat(coord)))
     .filter((i) => i !== undefined) as Coordinates[];
+    
+  console.log(locations, coordinates, itin);
 
   return (
     <div className="border w-full bg-white">

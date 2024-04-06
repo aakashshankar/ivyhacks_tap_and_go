@@ -7,8 +7,9 @@ import toast, { Toaster } from "react-hot-toast";
 
 interface FooterProps {
   isScroll: boolean;
+  dailyBudget: number;
 }
-const Footer = ({ isScroll }: FooterProps) => {
+const Footer = ({ isScroll, dailyBudget }: FooterProps) => {
   return (
     <div
       className={`sticky bottom-0 z-50 bg-[#F0ECE4] ${
@@ -24,7 +25,7 @@ const Footer = ({ isScroll }: FooterProps) => {
           </div>
           <div className="w-full rounded-2xl bg-white py-2 px-4 flex items-center justify-between">
             <p>Daily Budget</p>
-            <p>$ 65</p>
+            <p>$ {dailyBudget}</p>
           </div>
         </div>
       ) : (

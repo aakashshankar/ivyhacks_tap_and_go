@@ -73,6 +73,7 @@ export const locations = pgTable("locations", {
     .notNull()
     .references(() => itineraries.id),
   locationName: text("location_name").notNull(),
+  locationType: text("location_type").notNull(),
   coordinates: text("coordinates").notNull(),
   time: text("time").notNull(),
   budget: text("budget").notNull(),

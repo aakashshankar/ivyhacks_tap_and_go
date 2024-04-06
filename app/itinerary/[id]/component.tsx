@@ -75,7 +75,7 @@ export default function Component({ data }: { data: TripData }) {
             ))}
           </div>
         </div>
-        <Footer isScroll={isScroll} />
+        <Footer isScroll={isScroll} dailyBudget={activeItinerary.dailyBudget!}/>
       </ScrollArea.Viewport>
       <ScrollArea.Scrollbar orientation="vertical">
         <ScrollArea.Thumb />
