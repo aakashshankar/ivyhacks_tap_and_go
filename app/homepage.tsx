@@ -4,6 +4,13 @@ import "@placekit/autocomplete-js/dist/placekit-autocomplete.css";
 import { UserButton } from "@clerk/nextjs";
 
 import TravelForm from "@/components/common/travel-form";
+import {
+  ContextMenu,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuTrigger,
+} from "@/components/ui/context-menu";
+import Link from "next/link";
 
 export default function Home() {
   return (
@@ -17,7 +24,16 @@ export default function Home() {
         }}
       ></div>
       <div className="z-[51] absolute right-6 top-6">
-        <UserButton />
+        <ContextMenu>
+          <ContextMenuTrigger>
+            <UserButton />
+          </ContextMenuTrigger>
+          <ContextMenuContent className="z-[100]">
+            <ContextMenuItem>
+              <Link href="/record">Record</Link>
+            </ContextMenuItem>
+          </ContextMenuContent>
+        </ContextMenu>
       </div>
       {/* Gradient Overlay */}
       <div className="absolute left-0 right-0 top-0 h-[255px] rounded-t-2xl bg-gradient-to-b from-[#F7F1BA] via-transparent to-[#F0ECE4]"></div>
