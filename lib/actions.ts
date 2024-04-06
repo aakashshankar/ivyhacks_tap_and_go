@@ -126,9 +126,11 @@ export async function generatePlan(formData: FormData) {
           }
           const coordinatesData = await coordinatesResponse.json();
           const coordinates = coordinatesData.coordinates;
+          const address = coordinatesData.address;
           return {
             ...location,
             coordinates,
+            address,
           };
         })
       );
@@ -148,6 +150,8 @@ export async function generatePlan(formData: FormData) {
       travelStyle: style,
       startDate: date.from?.toDateString(),
       endDate: date.to?.toDateString(),
+      startTime: start,
+      endTime: end,
     })
     .returning();
 
@@ -168,6 +172,7 @@ export async function generatePlan(formData: FormData) {
         locationName: lcn.location,
         activity: lcn.activity,
         coordinates: lcn.coordinates ? lcn.coordinates.join(",") : "",
+        address: lcn.address ?? "",
         time: lcn.time,
         locationType: lcn.locationType,
       });

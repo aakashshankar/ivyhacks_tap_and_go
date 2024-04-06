@@ -20,6 +20,7 @@ export type ClaudeItinerary = {
   locationType: string;
   name?: string;
   coordinates: Coordinates;
+  address: string;
 };
 
 export type DateRange = {

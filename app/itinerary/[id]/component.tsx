@@ -28,10 +28,9 @@ export default function Component({ data }: { data: TripData }) {
   //
   const getDayFromItin = (activeDate: Date) => {
     const startDate = new Date(data.startDate);
-    const dayNumber =
-      Math.floor(
-        (activeDate.getTime() - startDate.getTime()) / (1000 * 3600 * 24),
-      );
+    const dayNumber = Math.floor(
+      (activeDate.getTime() - startDate.getTime()) / (1000 * 3600 * 24)
+    );
     return data.itineraries[dayNumber];
   };
 
@@ -75,7 +74,12 @@ export default function Component({ data }: { data: TripData }) {
             ))}
           </div>
         </div>
-        <Footer isScroll={isScroll} dailyBudget={activeItinerary.dailyBudget!}/>
+        <Footer
+          isScroll={isScroll}
+          dailyBudget={activeItinerary.dailyBudget!}
+          startTime={data.startTime}
+          endTime={data.endTime}
+        />
       </ScrollArea.Viewport>
       <ScrollArea.Scrollbar orientation="vertical">
         <ScrollArea.Thumb />

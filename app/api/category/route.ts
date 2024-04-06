@@ -1,5 +1,5 @@
 // app/api/getLocationCoordinates.ts
-import mbxGeocoding from "@mapbox/mapbox-sdk/services/geocoding";
+import mbxGeocoding from "@mapbox/mapbox-sdk";
 import { NextRequest } from "next/server";
 // import { Itinerary } from "@/lib/types";
 

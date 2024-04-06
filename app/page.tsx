@@ -4,7 +4,8 @@ import { auth } from "@clerk/nextjs";
 import { users } from "@/models/schema";
 import { eq } from "drizzle-orm";
 export default async function Page() {
-  const user = auth().protect();
+  console.log("Home Page")
+  const user = auth().protect({redirectUrl: "https://hopeful-goblin-67.accounts.dev/sign-in"});
   if (user.userId) {
     // Check if user exists in database.
     // If not, create a new user.

@@ -8,8 +8,10 @@ import toast, { Toaster } from "react-hot-toast";
 interface FooterProps {
   isScroll: boolean;
   dailyBudget: number;
+  startTime: string;
+  endTime: string;
 }
-const Footer = ({ isScroll, dailyBudget }: FooterProps) => {
+const Footer = ({ isScroll, dailyBudget, startTime, endTime }: FooterProps) => {
   return (
     <div
       className={`sticky bottom-0 z-50 bg-[#F0ECE4] ${
@@ -34,11 +36,11 @@ const Footer = ({ isScroll, dailyBudget }: FooterProps) => {
           <div className="w-full rounded-2xl bg-white py-2 px-4 flex items-center justify-between">
             <div className="flex items-center space-x-2">
               <ClockIcon className="w-5 h-5" />
-              <p>09:00 am - 06.00 pm</p>
+              <p>{startTime} - {endTime}</p>
             </div>
             <div className="flex space-x-2 justify-self-end">
               <BanknoteIcon className="w-5 h-5" />
-              <p>$25 - $35</p>
+              <p>$ {dailyBudget}</p>
             </div>
           </div>
         </div>

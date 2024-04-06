@@ -28,6 +28,8 @@ export const trips = pgTable("trips", {
     .references(() => users.id),
   startDate: date("start_date").notNull(),
   endDate: date("end_date").notNull(),
+  startTime: text("start_time").notNull(),
+  endTime: text("end_time").notNull(),
   city: text("city").notNull(),
   coordinates: text("coordinates").notNull(),
   countrycode: text("countrycode").notNull(),
@@ -73,6 +75,7 @@ export const locations = pgTable("locations", {
     .notNull()
     .references(() => itineraries.id),
   locationName: text("location_name").notNull(),
+  address: text("address").notNull(),
   locationType: text("location_type").notNull(),
   coordinates: text("coordinates").notNull(),
   time: text("time").notNull(),
