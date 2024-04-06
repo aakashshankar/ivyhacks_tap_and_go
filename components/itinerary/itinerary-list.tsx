@@ -5,14 +5,14 @@ import { ClockIcon } from "lucide-react";
 import { HourglassIcon } from "lucide-react";
 import { BanknoteIcon } from "lucide-react";
 import { MapPinIcon } from "lucide-react";
-import { Itinerary } from "@/lib/types";
+import type { Location } from "@/lib/types";
 import { Badge } from "@/components/ui/badge";
 
 type HeaderProps = {
-  itinerary: Itinerary;
+  location: Location;
   label: number;
 };
-const ItineraryList = ({ itinerary, label }: HeaderProps) => {
+const ItineraryList = ({ location, label }: HeaderProps) => {
   const [isOpen, setIsOpen] = React.useState(false);
   return (
     <div className="px-3 py-6 bg-white">
@@ -22,7 +22,7 @@ const ItineraryList = ({ itinerary, label }: HeaderProps) => {
           {label + 1}
         </div>
         <div className="col-span-6 text-left font-bold ml-2 text-lg">
-          {itinerary.location}
+          {location.locationName}
         </div>
 
         <div className="col-span-1 flex justify-center">
@@ -56,7 +56,7 @@ const ItineraryList = ({ itinerary, label }: HeaderProps) => {
         {isOpen && (
           <div className="grid grid-cols-8 gap-2 text-gray-700">
             <div className="col-start-2 col-span-full flex items-center py-1">
-              <div>{itinerary.activity}</div>
+              <div>{location.activity}</div>
             </div>
           </div>
         )}
@@ -81,11 +81,11 @@ const ItineraryList = ({ itinerary, label }: HeaderProps) => {
           <div className="col-start-2 col-span-6 gap-2 flex flex-col justify-between">
             <div className="flex space-x-2">
               <HourglassIcon className="w-5 h-5" />
-              <p>{itinerary.time}</p>
+              <p>{location.time}</p>
             </div>
             <div className="flex space-x-2 justify-self-end">
               <BanknoteIcon className="w-5 h-5" />
-              <p>{itinerary.budget}</p>
+              <p>{location.budget}</p>
             </div>
           </div>
         </div>

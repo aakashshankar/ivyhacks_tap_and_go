@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { useState, useCallback, useTransition } from "react";
-import { type DateRange } from "react-day-picker";
+import { type DateRange } from "@/lib/types";
 import { useForm } from "react-hook-form";
 import { LuggageIcon } from "lucide-react";
 import { generatePlan } from "@/lib/actions";

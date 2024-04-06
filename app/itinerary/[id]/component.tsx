@@ -11,8 +11,9 @@ import MoveType from "@/components/itinerary/move-type";
 import Footer from "@/components/itinerary/footer";
 // import { ScrollArea } from "@/components/ui/scroll-area";
 import * as ScrollArea from "@radix-ui/react-scroll-area";
+import type { TripData } from "@/lib/types";
 
-export default function Component({ data }: { data: any }) {
+export default function Component({ data }: { data: TripData }) {
   const [isScroll, setIsScroll] = useState(false);
   const handleScroll = (event: React.UIEvent<HTMLDivElement>) => {
     const viewport = event.currentTarget;
@@ -25,14 +26,13 @@ export default function Component({ data }: { data: any }) {
   };
   // function to get day from itin based on active date
   //
-  const getDayFromItin = (activeDate: Date): any[] => {
+  const getDayFromItin = (activeDate: Date) => {
     const startDate = new Date(data.startDate);
     const dayNumber =
       Math.floor(
         (activeDate.getTime() - startDate.getTime()) / (1000 * 3600 * 24),
-      ) + 1;
-    const key = `day_${dayNumber}`;
-    return data.itin[key];
+      );
+    return data.itineraries[dayNumber];
   };
 
   const [activeDate, setActiveDate] = useState(new Date(data.startDate));
@@ -67,9 +67,9 @@ export default function Component({ data }: { data: any }) {
           </div>
           <Map itin={activeItinerary} />
           <div>
-            {activeItinerary.map((itin, index) => (
+            {activeItinerary.locations.map((location, index) => (
               <div key={index}>
-                <ItineraryList itinerary={itin} label={index} />
+                <ItineraryList location={location} label={index} />
                 <MoveType />
               </div>
             ))}

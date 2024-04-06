@@ -1,6 +1,22 @@
+import type { getUserTripData } from "@/queries";
+
 // lib/types.ts
 export interface Locations {
-  [key: string]: Itinerary[];
+  [key: string]: ClaudeItinerary[];
+}
+
+export type ClaudeItinerary = {
+  location: string;
+  time: string;
+  budget: string;
+  activity: string;
+  name?: string;
+  coordinates: Coordinates;
+};
+
+export type DateRange = {
+  from: Date;
+  to: Date;
 }
 
 export type Coordinates = [number, number];
@@ -18,14 +34,9 @@ export type ClaudeAPIResponse = {
   itinerary: string;
 };
 
-export type Itinerary = {
-  location: string;
-  time: string;
-  budget: string;
-  activity?: string;
-  name?: string;
-  coordinates?: Coordinates;
-};
+export type TripData = NonNullable<Awaited<ReturnType<typeof getUserTripData>>>;
+export type Itinerary = TripData["itineraries"][number];
+export type Location = TripData["itineraries"][number]["locations"][number];
 
 export type DbData = {
   destination: string;

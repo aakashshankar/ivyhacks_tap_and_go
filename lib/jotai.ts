@@ -1,4 +1,4 @@
 import { atom } from "jotai";
-import { DateRange } from "react-day-picker";
+import type { DateRange } from "@/lib/types";
 
 export const dateJotai = atom<DateRange | undefined>(undefined);

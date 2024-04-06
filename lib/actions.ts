@@ -8,7 +8,7 @@ import type {
   ClaudeAPIResponse,
   DbData,
 } from "./types";
-import { FormData } from "@/components/common/travel-form";
+import type { FormData } from "@/components/common/travel-form";
 import { auth, currentUser } from "@clerk/nextjs";
 import db from "./db";
 import { itineraries, locations, trips } from "@/models/schema";
@@ -67,7 +67,7 @@ export async function generatePlan(formData: FormData) {
       d2
     );
   }
-  
+
   console.log("weather", weather);
   const response = await fetch(
     process.env.NEXT_PUBLIC_SERVER_URL + "/api/plan",
@@ -97,7 +97,7 @@ export async function generatePlan(formData: FormData) {
   const data: ClaudeAPIResponse = await response.json();
 
   const updatedLocations: Locations = {};
-  
+
   console.log("Inserting data into DB for user", user.userId);
 
   await Promise.all(
@@ -160,13 +160,16 @@ export async function generatePlan(formData: FormData) {
     for (const lcn of lcns) {
       await db.insert(locations).values({
         itineraryId: itin[0].id,
+        budget: lcn.budget,
         locationName: lcn.location,
         activity: lcn.activity,
+        coordinates: lcn.coordinates ? lcn.coordinates.join(",") : "",
+        time: lcn.time,
       });
     }
   }
   console.log("Inserted data into DB for user", user.userId);
-  return redirect("/itinerary");
+  redirect(`/itinerary/${trip[0].id}`);
 }
 
 export async function getRoute(
