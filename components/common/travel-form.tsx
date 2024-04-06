@@ -8,6 +8,7 @@ import { LuggageIcon } from "lucide-react";
 import { generatePlan } from "@/lib/actions";
 import { BanknoteIcon } from "lucide-react";
 import { ClockIcon } from "lucide-react";
+import { UserRoundIcon } from "lucide-react";
 import { PlaceKit } from "@placekit/autocomplete-react";
 import "@placekit/autocomplete-js/dist/placekit-autocomplete.css";
 
@@ -58,6 +59,7 @@ export interface FormData {
   start: string;
   end: string;
   budget: string;
+  people: string;
   companion: string[];
 }
 
@@ -128,6 +130,7 @@ const TravelForm = ({ buttonText }: TravelFormProps) => {
       start: "",
       end: "",
       budget: "",
+      people: "",
       companion: [],
     },
   });
@@ -284,24 +287,45 @@ const TravelForm = ({ buttonText }: TravelFormProps) => {
             )}
           />
         </div>
-        <FormField
-          control={form.control}
-          name="budget"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Budget</FormLabel>
-              <FormControl>
-                <div className="w-full relative">
-                  <div className="absolute left-4 top-1/2 transform -translate-y-1/2">
-                    <BanknoteIcon className="w-5 h-5 text-[#2E2E29]" />
+        <div className="flex w-full space-x-4">
+          <FormField
+            control={form.control}
+            name="budget"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Budget</FormLabel>
+                <FormControl>
+                  <div className="w-full relative">
+                    <div className="absolute left-4 top-1/2 transform -translate-y-1/2">
+                      <BanknoteIcon className="w-5 h-5 text-[#2E2E29]" />
+                    </div>
+                    <Input placeholder="500" className="pl-12" {...field} />
                   </div>
-                  <Input placeholder="500" className="pl-12" {...field} />
-                </div>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="people"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>People</FormLabel>
+                <FormControl>
+                  <div className="w-full relative">
+                    <div className="absolute left-4 top-1/2 transform -translate-y-1/2">
+                      <UserRoundIcon className="w-5 h-5 text-[#2E2E29]" />
+                    </div>
+                    <Input placeholder="1" className="pl-12" {...field} />
+                  </div>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+
         <FormField
           control={form.control}
           name="companion"
@@ -348,7 +372,7 @@ const TravelForm = ({ buttonText }: TravelFormProps) => {
           {/* <Link href="/itinerary" passHref> */}
           <Button
             type="submit"
-            className="bg-[#99BAEC] text-black w-full py-3 text-lg hover:bg-[#99BAEC]/90"
+            className="bg-[#99BAEC] text-black w-full h-12 text-lg hover:bg-[#99BAEC]/90"
           >
             {isPending ? <LoadingSpinner className="w-6 h-6" /> : buttonText}
           </Button>

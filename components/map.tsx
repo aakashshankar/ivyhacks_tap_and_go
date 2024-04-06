@@ -5,6 +5,7 @@ import MapGL, { type MapRef } from "react-map-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import mapboxgl from "mapbox-gl";
 import MapMarker from "./mapmarker";
+import Weather from "../components/itinerary/weather";
 
 interface MapProps {
   locations: string[];
@@ -44,16 +45,24 @@ export default function MapComponent({
   }, [locations]);
 
   return (
-    <MapGL
-      ref={mapRef}
-      {...viewState}
-      onMove={(evt) => setViewState(evt.viewState)}
-      style={{ width: "100%", height: "400px" }}
-      mapStyle="mapbox://styles/jk2933/clu5m9xg500hp01pabwfocrjz"
-      mapboxAccessToken="pk.eyJ1IjoiamsyOTMzIiwiYSI6ImNsdTVtNXBsbDBsMnUybG44OXo0MGx4bWsifQ.NuqAVKMztokOZg2PsZXWEA"
-    >
-      <MapMarker locations={locations} coordinates={coordinates} />
-      {/* Render routes */}
-    </MapGL>
+    <div className="relative">
+      {/* WEATHER */}
+      <div className="absolute top-3 right-3 z-10">
+        <Weather />
+      </div>
+
+      {/* MAP */}
+      <MapGL
+        ref={mapRef}
+        {...viewState}
+        onMove={(evt) => setViewState(evt.viewState)}
+        style={{ width: "100%", height: "400px" }}
+        mapStyle="mapbox://styles/jk2933/clu5m9xg500hp01pabwfocrjz"
+        mapboxAccessToken="pk.eyJ1IjoiamsyOTMzIiwiYSI6ImNsdTVtNXBsbDBsMnUybG44OXo0MGx4bWsifQ.NuqAVKMztokOZg2PsZXWEA"
+      >
+        <MapMarker locations={locations} coordinates={coordinates} />
+        {/* Render routes */}
+      </MapGL>
+    </div>
   );
 }
