@@ -65,7 +65,7 @@ export default function Component({ data }: { data: UserTripData }) {
       <div className="relative z-50 flex flex-col h-full w-full">
         {/* HEADER */}
         <div className="space-y-4 p-6 mt-4">
-          <Link href="/itinerary" className="w-fit flex items-center">
+          <Link href="/" className="w-fit flex items-center">
             <ArrowLeftIcon className={`w-5 h-5`} />
           </Link>
           <div className="text-2xl text-left font-bold text-black">
