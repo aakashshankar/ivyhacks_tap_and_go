@@ -5,16 +5,16 @@ import { ClockIcon } from "lucide-react";
 import { HourglassIcon } from "lucide-react";
 import { BanknoteIcon } from "lucide-react";
 import { MapPinIcon } from "lucide-react";
-import { Itinerary } from "@/lib/types";
+import type { Location } from "@/lib/types";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "../ui/separator";
 import { Suggestion } from "./suggestion";
 
 type HeaderProps = {
-  itinerary: Itinerary;
+  location: Location;
   label: number;
 };
-const ItineraryList = ({ itinerary, label }: HeaderProps) => {
+const ItineraryList = ({ location, label }: HeaderProps) => {
   const [isOpen, setIsOpen] = React.useState(false);
   return (
     <>
