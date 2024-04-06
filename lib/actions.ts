@@ -71,7 +71,7 @@ export async function generatePlan(formData: FormData) {
 
   console.log("weather", weather);
   const response = await fetch(
-    process.env.NEXT_PUBLIC_SERVER_URL + "/api/plan",
+    process.env.NEXT_PUBLIC_SERVER_URL + "/api/langchain",
     {
       method: "POST",
       headers: {
@@ -100,6 +100,8 @@ export async function generatePlan(formData: FormData) {
   const updatedLocations: UpdatedLocations = {};
 
   console.log("Inserting data into DB for user", user.userId);
+  
+  console.log("data", data);
 
   await Promise.all(
     Object.entries(data.locations).map(async ([day, locations]) => {
