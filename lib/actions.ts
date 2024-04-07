@@ -100,7 +100,7 @@ export async function generatePlan(formData: FormData) {
   const updatedLocations: UpdatedLocations = {};
 
   console.log("Inserting data into DB for user", user.userId);
-  
+
   console.log("data", data);
 
   await Promise.all(
@@ -123,9 +123,10 @@ export async function generatePlan(formData: FormData) {
               }),
             }
           );
-          
+
           const unsplashResponse = await fetch(
-            process.env.NEXT_PUBLIC_SERVER_URL + `/api/unsplash?location=${location.location}`,
+            process.env.NEXT_PUBLIC_SERVER_URL +
+              `/api/unsplash?location=${location.location}`,
             {
               method: "GET",
               headers: {
@@ -139,17 +140,24 @@ export async function generatePlan(formData: FormData) {
           const coordinatesData = await coordinatesResponse.json();
           const coordinates = coordinatesData.coordinates;
           const address = coordinatesData.address;
-          const image = await unsplashResponse.json();
-          const imageUrl = image.url;
+          if (unsplashResponse.ok) {
+            const image = await unsplashResponse.json();
+            const imageUrl = image.url;
+            return {
+              ...location,
+              coordinates,
+              address,
+              imageUrl,
+            };
+          }
           return {
             ...location,
             coordinates,
             address,
-            imageUrl,
           };
         })
       );
-      updatedLocations[day] = { dailyBudget, updatedLocationsForDay};
+      updatedLocations[day] = { dailyBudget, updatedLocationsForDay };
     })
   );
 

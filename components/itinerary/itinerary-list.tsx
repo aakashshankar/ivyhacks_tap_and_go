@@ -91,12 +91,12 @@ const ItineraryList = ({ location, label }: HeaderProps) => {
             </div>
           )}
 
-          <div className="grid grid-cols-8 gap-2 font-semibold mt-2">
+          {/* <div className="grid grid-cols-8 gap-2 font-semibold mt-2">
             <div className="col-start-2 col-span-full flex items-center space-x-2">
               <ClockIcon className="w-5 h-5" />
               <p>{location.time}</p>
             </div>
-          </div>
+          </div> */}
           {isOpen && (
             <div className="grid grid-cols-8 gap-2 font-semibold">
               <div className="col-start-2 col-span-full flex items-center space-x-2">

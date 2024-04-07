@@ -16,7 +16,7 @@ const Header = ({ isScroll, data }: HeaderProps) => {
       <Link href="/" className="w-fit flex items-center">
         <ArrowLeftIcon className={`w-5 h-5 ${!isScroll && "mb-4"}`} />
         {isScroll && (
-          <p className="text-lg w-full pl-3">Adventure Trip to Paris</p>
+          <p className="text-lg w-full pl-3 capitalize">{travelStyle} trip to {city}</p>
         )}
       </Link>
       {/* {isScroll && (
@@ -30,7 +30,7 @@ const Header = ({ isScroll, data }: HeaderProps) => {
         <div className="space-y-4">
           <section>
             <div className="flex items-center justify-between">
-              <div className="flex flex-col text-xl">
+              <div className="flex flex-col text-xl capitalize">
                 <p>{travelStyle} Trip</p>
                 <p>to {city}</p>
               </div>

@@ -44,7 +44,7 @@ const DateScroller = ({
               )}
             </p>
             <div className="p-2 bg-white rounded-full">
-              <p className="font-bold">{date.getDate()}</p>
+              <p className="font-bold">{date.getDate() + 1}</p>
             </div>
           </CarouselItem>
         ))}
